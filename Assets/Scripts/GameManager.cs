@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -11,6 +12,14 @@ public class GameManager : MonoBehaviour
         get;
         private set;
     }
+
+    public List<Word> words
+    {
+        get;
+        private set;
+    }
+
+    private const string wordsFilePath = "Data/words";
 
     public GameObject currentPage
     {
@@ -112,6 +121,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         CreateInstance();
+        Initialize();
         SetAllPagesActive(true);
     }
 
@@ -127,6 +137,27 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    private void Initialize()
+    {
+        ReadCsvWords();
+    }
+
+    private void ReadCsvWords()
+    {
+        words = new List<Word>();
+        //csvファイル読み取り
+        StringReader stringReader = new StringReader(((TextAsset)Resources.Load(wordsFilePath)).text);
+
+        //ストリームの末端まで繰り返す
+        while(stringReader.Peek() != -1)
+        {
+            string[] values = stringReader.ReadLine().Split(',');
+            words.Add(new Word(values[0], values[1]));
+        }
+        //アルファベット順にソート
+        words.Sort((a, b) => a.english.CompareTo(b.english));
     }
 
     private void SetAllPagesActive(bool active)
