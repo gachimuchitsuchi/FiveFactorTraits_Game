@@ -78,8 +78,9 @@ public class StartManager : MonoBehaviour
         warningText.gameObject.SetActive(false);
 
         PlayerDataManager.instance.playerData.playerName = playerNameInputField.text;
+        PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FirstExamination;
 
-        GameManager.instance.ShowFiveFactorQuestionPage();
+        GameManager.instance.ShowExaminationPage();
     }
 
     //inputString内に無効な文字が含まれているかチェックする

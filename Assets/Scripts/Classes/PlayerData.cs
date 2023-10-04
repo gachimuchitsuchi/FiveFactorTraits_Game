@@ -34,13 +34,15 @@ public class PlayerData
     //コンストラクタ
     public PlayerData()
     {
-        playerName = "";
+        playerName = PlayerPrefs.GetString("Player Name", "");
 
         playerTypePercentages = new Dictionary<FiveFactorQuestionManager.PlayerType, int>();
         foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
         {
             playerTypePercentages.Add(playerType, 0);
         }
+
+        gamePhase = (GamePhase)PlayerPrefs.GetInt("Game Phase", (int)GamePhase.FirstExamination);
 
     }
 }

@@ -98,26 +98,38 @@ public class PlayerDataManager : MonoBehaviour
             playerNameText.text = "-";
         }
 
-        foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+        if(PlayerData.GamePhase.FiveFactorQuestion < playerData.gamePhase)
         {
-            switch (playerType)
+            foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
             {
-                case FiveFactorQuestionManager.PlayerType.Aesthietic:
-                    aesthieticPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
-                    break;
-                case FiveFactorQuestionManager.PlayerType.Narrative:
-                    narrativePercentageText.text = playerData.playerTypePercentages[playerType] + "%";
-                    break;
-                case FiveFactorQuestionManager.PlayerType.Goal:
-                    goalPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
-                    break;
-                case FiveFactorQuestionManager.PlayerType.Social:
-                    socialPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
-                    break;
-                case FiveFactorQuestionManager.PlayerType.Challenge:
-                    challengePercentageText.text = playerData.playerTypePercentages[playerType] + "%";
-                    break;
+                switch (playerType)
+                {
+                    case FiveFactorQuestionManager.PlayerType.Aesthietic:
+                        aesthieticPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Narrative:
+                        narrativePercentageText.text = playerData.playerTypePercentages[playerType] + "%";
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Goal:
+                        goalPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Social:
+                        socialPercentageText.text = playerData.playerTypePercentages[playerType] + "%";
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Challenge:
+                        challengePercentageText.text = playerData.playerTypePercentages[playerType] + "%";
+                        break;
+                }
             }
         }
+        else
+        {
+            aesthieticPercentageText.text = "-";
+            narrativePercentageText.text = "-";
+            goalPercentageText.text = "-";
+            socialPercentageText.text = "-";
+            challengePercentageText.text = "-";
+        }
+        
     }
 }

@@ -183,6 +183,7 @@ public class ExaminationManager : MonoBehaviour
         }
         else
         {
+            ExaminationResultManager.instance.ShowResult(score, examinationWordsCount);
             GameManager.instance.ShowExaminationResultPage();
         }
     }

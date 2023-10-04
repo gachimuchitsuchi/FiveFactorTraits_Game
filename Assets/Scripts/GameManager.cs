@@ -177,7 +177,30 @@ public class GameManager : MonoBehaviour
 
     public void Play()
     {
-        ShowStartPage();
+        switch (PlayerDataManager.instance.playerData.gamePhase)
+        {
+            case PlayerData.GamePhase.FirstExamination:
+                if(PlayerDataManager.instance.playerData.playerName == "")
+                {
+                    ShowStartPage();
+                }
+                else
+                {
+                    ShowExaminationPage();
+                }
+                break;
+            case PlayerData.GamePhase.FiveFactorQuestion:
+                ShowFiveFactorQuestionPage();
+                break;
+            case PlayerData.GamePhase.Learning:
+                ShowMenuPage();
+                break;
+            case PlayerData.GamePhase.FinalExamination:
+                ShowExaminationPage();
+                break;
+            case PlayerData.GamePhase.Completed:
+                break;
+        }
     }
 
     public void ShowTitlePage()
@@ -242,7 +265,7 @@ public class GameManager : MonoBehaviour
 
         rightButton.SetActive(true);
         rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rightButton.GetComponent<Button>().onClick.AddListener(ShowExaminationPage);
+        rightButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
         rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
     }
 
@@ -268,10 +291,32 @@ public class GameManager : MonoBehaviour
 
         leftButton.SetActive(false);
 
-        rightButton.SetActive(true);
-        rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rightButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
-        rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
+        //Debug.Log(PlayerDataManager.instance.playerData.gamePhase);
+
+        switch (PlayerDataManager.instance.playerData.gamePhase)
+        {
+            case PlayerData.GamePhase.FiveFactorQuestion:
+                rightButton.SetActive(true);
+                rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                rightButton.GetComponent<Button>().onClick.AddListener(ShowFiveFactorQuestionPage);
+                rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
+                break;
+
+            case PlayerData.GamePhase.Learning:
+                rightButton.SetActive(true);
+                rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                rightButton.GetComponent<Button>().onClick.AddListener(ShowExaminationMenuPage);
+                rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "OK";
+                break;
+
+            case PlayerData.GamePhase.Completed:
+                rightButton.SetActive(true);
+                rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                rightButton.GetComponent<Button>().onClick.AddListener(ShowTitlePage);
+                rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "OK";
+                break;
+        }
+        
     }
 
     public void ShowMenuPage()

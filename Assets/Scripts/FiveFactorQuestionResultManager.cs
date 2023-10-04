@@ -80,5 +80,6 @@ public class FiveFactorQuestionResultManager : MonoBehaviour
     private void SaveResult(Dictionary<FiveFactorQuestionManager.PlayerType, int> playerTypePercentages)
     {
         PlayerDataManager.instance.playerData.playerTypePercentages = playerTypePercentages;
+        PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.Learning;
     }
 }

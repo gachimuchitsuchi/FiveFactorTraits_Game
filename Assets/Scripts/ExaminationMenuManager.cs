@@ -52,6 +52,7 @@ public class ExaminationMenuManager : MonoBehaviour
 
     private void StartFinalExamination()
     {
+        PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FinalExamination;
         GameManager.instance.ShowExaminationPage();
     }
 }

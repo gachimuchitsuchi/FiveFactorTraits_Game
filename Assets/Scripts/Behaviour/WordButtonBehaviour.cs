@@ -27,6 +27,7 @@ public class WordButtonBehaviour : MonoBehaviour
     private void Awake()
     {
         UpdateWord();
+        Initialize();
     }
 
     private void Initialize()
