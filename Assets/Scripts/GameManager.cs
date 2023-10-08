@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
         while(stringReader.Peek() != -1)
         {
             string[] values = stringReader.ReadLine().Split(',');
-            words.Add(new Word(values[0], values[1]));
+            words.Add(new Word(values[0], values[1], int.Parse(values[2])));
         }
         //アルファベット順にソート
         words.Sort((a, b) => a.english.CompareTo(b.english));
