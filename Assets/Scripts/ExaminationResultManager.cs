@@ -11,6 +11,12 @@ public class ExaminationResultManager : MonoBehaviour
         private set;
     }
 
+    public ExpData expData
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("ScoreText")]
     private TextMeshProUGUI scoreText
     {
@@ -28,6 +34,7 @@ public class ExaminationResultManager : MonoBehaviour
     private void Awake()
     {
         CreateInstance();
+        CreateExpData();
     }
 
     private void CreateInstance()
@@ -38,10 +45,36 @@ public class ExaminationResultManager : MonoBehaviour
         }
     }
 
-    public void ShowResult(int score, int maximumScore)
+    private void CreateExpData()
+    {
+        if(expData == null)
+        {
+            expData = new ExpData();
+        }
+    }
+    public void ShowResult(int score, int maximumScore, ExaminationManager.ExaminationLevel level)
     {
         scoreText.text = score.ToString();
         maximumScoreText.text = "/" + maximumScore;
+
+        if (ExaminationManager.ExaminationLevel.All == level)
+        {
+
+        }
+        else
+        {
+            if(score == maximumScore)
+            {
+                LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)] = true;
+                Debug.Log(LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)]);
+            }
+            int moreExp = expData.GetNeedForLvUpExp(PlayerDataManager.instance.playerData.level + 1);
+            PlayerDataManager.instance.playerData.exp += score * 10;
+            if(moreExp <= PlayerDataManager.instance.playerData.exp)
+            {
+                PlayerDataManager.instance.playerData.level++;
+            }
+        }
 
         SaveResult(score);
     }

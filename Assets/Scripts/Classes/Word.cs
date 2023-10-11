@@ -16,7 +16,7 @@ public class Word
         set;
     }
 
-    public int Level
+    public int level
     {
         get;
         set;
@@ -26,6 +26,6 @@ public class Word
     {
         this.english = english;
         this.japanese = japanese;
-        this.Level = level;
+        this.level = level;
     }
 }

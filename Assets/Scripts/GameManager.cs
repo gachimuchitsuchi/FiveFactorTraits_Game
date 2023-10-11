@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         private set;
     }
 
-    private const string wordsFilePath = "Data/words";
+    private const string wordsFilePath = "Data/wordsTest";
 
     public GameObject currentPage
     {
@@ -104,6 +104,13 @@ public class GameManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("LevelMenuPage")]
+    private GameObject levelMenuPage
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("LeftButton")]
     private GameObject leftButton
     {
@@ -173,6 +180,7 @@ public class GameManager : MonoBehaviour
         wordListPage.SetActive(active);
         gameModeMenuPage.SetActive(active);
         examinationMenuPage.SetActive(active);
+        levelMenuPage.SetActive(active);
     }
 
     public void Play()
@@ -186,7 +194,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    ShowExaminationPage();
+                    ShowExaminationPage(ExaminationManager.ExaminationLevel.All);
                 }
                 break;
             case PlayerData.GamePhase.FiveFactorQuestion:
@@ -196,7 +204,7 @@ public class GameManager : MonoBehaviour
                 ShowMenuPage();
                 break;
             case PlayerData.GamePhase.FinalExamination:
-                ShowExaminationPage();
+                ShowExaminationPage(0);
                 break;
             case PlayerData.GamePhase.Completed:
                 break;
@@ -269,8 +277,9 @@ public class GameManager : MonoBehaviour
         rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
     }
 
-    public void ShowExaminationPage()
+    public void ShowExaminationPage(ExaminationManager.ExaminationLevel level)
     {
+        ExaminationManager.instance.SetExaminationLevel(level);
         currentPage?.SetActive(false);
         currentPage = examinationPage;
         currentPage?.SetActive(true);
@@ -305,7 +314,7 @@ public class GameManager : MonoBehaviour
             case PlayerData.GamePhase.Learning:
                 rightButton.SetActive(true);
                 rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                rightButton.GetComponent<Button>().onClick.AddListener(ShowExaminationMenuPage);
+                rightButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
                 rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "OK";
                 break;
 
@@ -328,7 +337,7 @@ public class GameManager : MonoBehaviour
         leftButton.SetActive(true);
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowTitlePage);
-        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Title";
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "TITLE";
 
         rightButton.SetActive(false);
     }
@@ -342,7 +351,7 @@ public class GameManager : MonoBehaviour
         leftButton.SetActive(true);
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
-        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Back";
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
 
         rightButton.SetActive(false);
     }
@@ -356,7 +365,7 @@ public class GameManager : MonoBehaviour
         leftButton.SetActive(true);
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
-        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Back";
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
 
         rightButton.SetActive(false);
     }
@@ -370,7 +379,21 @@ public class GameManager : MonoBehaviour
         leftButton.SetActive(true);
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
-        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Back";
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowLevelMenuPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = levelMenuPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(true);
+        leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        leftButton.GetComponent<Button>().onClick.AddListener(ShowGameModeMenuPage);
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
 
         rightButton.SetActive(false);
     }

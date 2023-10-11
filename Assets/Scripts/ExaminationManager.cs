@@ -15,6 +15,22 @@ public class ExaminationManager : MonoBehaviour
         private set;
     }
 
+    public enum ExaminationLevel
+    {
+        All,
+        Level1,
+        Level2,
+        Level3,
+        Level4,
+        Level5
+    }
+
+    private ExaminationLevel examinationLevel
+    {
+        get;
+        set;
+    }
+
     private List<Word> examinationWords;
     private int examinationWordsCount;
 
@@ -22,7 +38,7 @@ public class ExaminationManager : MonoBehaviour
 
     private int score;
 
-    [field: SerializeField, RenameField("Queston Number Text")]
+    [field: SerializeField, RenameField("Question Number Text")]
     private TextMeshProUGUI questionNumberText
     {
         get;
@@ -79,7 +95,7 @@ public class ExaminationManager : MonoBehaviour
     {
         score = 0;
         currentQuestionNumber = 0;
-        examinationWordsCount = GameManager.instance.words.Count;
+        examinationWordsCount = 0;
 
         InitializeWords();
         UpdateQuestion();
@@ -88,12 +104,30 @@ public class ExaminationManager : MonoBehaviour
     private void InitializeWords()
     {
         examinationWords = new List<Word>();
-        //リストをランダムに並び変える
-        List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
-        for(int i=0; i<examinationWordsCount; i++)
+        Debug.Log(examinationLevel);
+        //ワードリスト作成
+        if(examinationLevel == ExaminationLevel.All)
         {
-            examinationWords.Add(randomWords[i]);
+            //リストをランダムに並び変える
+            List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
+            for (int i = 0; i < randomWords.Count; i++)
+            {
+                examinationWords.Add(randomWords[i]);
+            }
         }
+        else
+        {
+            //リストをランダムに並び変える
+            List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
+            for (int i = 0; i < randomWords.Count; i++)
+            {
+                if(randomWords[i].level == (int)examinationLevel)
+                {
+                    examinationWords.Add(randomWords[i]);
+                }
+            }
+        }
+        examinationWordsCount = examinationWords.Count;
     }
 
     public void UpdateQuestion()
@@ -183,8 +217,14 @@ public class ExaminationManager : MonoBehaviour
         }
         else
         {
-            ExaminationResultManager.instance.ShowResult(score, examinationWordsCount);
+            ExaminationResultManager.instance.ShowResult(score, examinationWordsCount, examinationLevel);
             GameManager.instance.ShowExaminationResultPage();
         }
+    }
+
+    public void SetExaminationLevel(ExaminationLevel level)
+    {
+        //Debug.Log(level);
+        examinationLevel = level;
     }
 }

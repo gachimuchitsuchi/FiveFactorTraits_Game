@@ -47,12 +47,12 @@ public class ExaminationMenuManager : MonoBehaviour
 
     private void StartPracticeExamination()
     {
-        GameManager.instance.ShowExaminationPage();
+        GameManager.instance.ShowExaminationPage(ExaminationManager.ExaminationLevel.All);
     }
 
     private void StartFinalExamination()
     {
         PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FinalExamination;
-        GameManager.instance.ShowExaminationPage();
+        GameManager.instance.ShowExaminationPage(ExaminationManager.ExaminationLevel.All);
     }
 }

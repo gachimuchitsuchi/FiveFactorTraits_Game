@@ -80,7 +80,7 @@ public class StartManager : MonoBehaviour
         PlayerDataManager.instance.playerData.playerName = playerNameInputField.text;
         PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FirstExamination;
 
-        GameManager.instance.ShowExaminationPage();
+        GameManager.instance.ShowExaminationPage(0);
     }
 
     //inputString内に無効な文字が含まれているかチェックする

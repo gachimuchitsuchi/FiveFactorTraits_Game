@@ -30,7 +30,19 @@ public class PlayerData
         get;
         set;
     }
-    
+
+    public int level
+    {
+        get;
+        set;
+    }
+
+    public int exp
+    {
+        get;
+        set;
+    }
+
     //コンストラクタ
     public PlayerData()
     {
@@ -44,5 +56,7 @@ public class PlayerData
 
         gamePhase = (GamePhase)PlayerPrefs.GetInt("Game Phase", (int)GamePhase.FirstExamination);
 
+        level = PlayerPrefs.GetInt("Level", 1);
+        exp = PlayerPrefs.GetInt("Exp", 0);
     }
 }

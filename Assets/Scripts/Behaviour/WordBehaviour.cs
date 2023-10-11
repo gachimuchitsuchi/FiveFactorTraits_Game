@@ -25,9 +25,18 @@ public class WordBehaviour : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("LevelText")]
+    private TextMeshProUGUI levelText
+    {
+        get;
+        set;
+    }
+
     public void UpdateWord()
     {
         englishText.text = word.english;
         japaneseText.text = word.japanese;
+        levelText.text = "Lv" + word.level;
+
     }
 }
