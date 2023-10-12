@@ -63,23 +63,18 @@ public class ExaminationResultManager : MonoBehaviour
         }
         else
         {
-            if(score == maximumScore)
-            {
-                LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)] = true;
-                Debug.Log(LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)]);
-            }
             int moreExp = expData.GetNeedForLvUpExp(PlayerDataManager.instance.playerData.level + 1);
-            PlayerDataManager.instance.playerData.exp += score * 10;
+            PlayerDataManager.instance.playerData.exp += expData.CulcExp(score, maximumScore, level);
             if(moreExp <= PlayerDataManager.instance.playerData.exp)
             {
                 PlayerDataManager.instance.playerData.level++;
             }
         }
 
-        SaveResult(score);
+        SaveResult();
     }
 
-    private void SaveResult(int score)
+    private void SaveResult()
     {
         if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FirstExamination)
         {
