@@ -64,7 +64,7 @@ public class ExaminationResultManager : MonoBehaviour
         else
         {
             int moreExp = expData.GetNeedForLvUpExp(PlayerDataManager.instance.playerData.level + 1);
-            PlayerDataManager.instance.playerData.exp += expData.CulcExp(score, maximumScore, level);
+            PlayerDataManager.instance.playerData.exp += expData.CalcExp(score, maximumScore, level);
             if(moreExp <= PlayerDataManager.instance.playerData.exp)
             {
                 PlayerDataManager.instance.playerData.level++;

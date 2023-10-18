@@ -31,7 +31,7 @@ public class ExpData
         return needExpDictionary[level];
     }
 
-    public int CalcuExp(int score, int maximumScore, ExaminationManager.ExaminationLevel level)
+    public int CalcExp(int score, int maximumScore, ExaminationManager.ExaminationLevel level)
     {
         int exp = 0;
         if(score == maximumScore)
