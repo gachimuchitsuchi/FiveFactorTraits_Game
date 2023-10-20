@@ -6,37 +6,21 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 
-
-public class ExaminationManager : MonoBehaviour
+public class BossManager : MonoBehaviour
 {
-    public static ExaminationManager instance
+    public static BossManager instance
     {
         get;
         private set;
     }
 
-    public enum ExaminationLevel
-    {
-        All,
-        Level1,
-        Level2,
-        Level3,
-        Level4,
-        Level5
-    }
-
-    private ExaminationLevel examinationLevel
-    {
-        get;
-        set;
-    }
+    private const float timeLimit = 10.0f;
+    private float countDown;
 
     private List<Word> examinationWords;
     private int examinationWordsCount;
 
     private int currentQuestionNumber;
-
-    private int score;
 
     [field: SerializeField, RenameField("Question Number Text")]
     private TextMeshProUGUI questionNumberText
@@ -47,6 +31,13 @@ public class ExaminationManager : MonoBehaviour
 
     [field: SerializeField, RenameField("Japanese Text")]
     private TextMeshProUGUI japaneseText
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("TimeText")]
+    private TextMeshProUGUI timeText
     {
         get;
         set;
@@ -83,6 +74,21 @@ public class ExaminationManager : MonoBehaviour
         Initialize();
     }
 
+    private void Update()
+    {
+        if(countDown > 0)
+        {
+            countDown -= Time.deltaTime;
+            timeText.text = "TIME" + " " + countDown.ToString("f1");
+        }
+        if (countDown < 0)
+        {
+            countDown = 0;
+            timeText.text = "TIME" + " " + countDown.ToString("f1");
+            Debug.Log("0秒です");
+        }
+    }
+
     private void CreateInstance()
     {
         if(instance == null)
@@ -93,7 +99,6 @@ public class ExaminationManager : MonoBehaviour
 
     private void Initialize()
     {
-        score = 0;
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
 
@@ -104,37 +109,52 @@ public class ExaminationManager : MonoBehaviour
     private void InitializeWords()
     {
         examinationWords = new List<Word>();
-        //ワードリストをランダムに並び変える
-        List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
-        Debug.Log(examinationLevel);
 
-        //試験リスト作成
-        if(examinationLevel == ExaminationLevel.All)
+        /// ワードリスト作成 ///
+
+        //リストをランダムに並び変える
+        List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
+        //Level1 or Level2　の単語を6個追加
+        for (int i=0; i<GameManager.instance.words.Count; i++)
         {
-            for (int i = 0; i < randomWords.Count; i++)
+            if(randomWords[i].level == 1 || randomWords[i].level == 2)
             {
                 examinationWords.Add(randomWords[i]);
             }
+
+            if (examinationWords.Count == 6) break;
         }
-        else
+        //Level3 or Level4　の単語を10個追加
+        for(int i=0; i<GameManager.instance.words.Count; i++)
         {
-            for (int i = 0; i < randomWords.Count; i++)
+            if(randomWords[i].level == 3 || randomWords[i].level == 4)
             {
-                if(randomWords[i].level == (int)examinationLevel)
-                {
-                    examinationWords.Add(randomWords[i]);
-                }
+                examinationWords.Add(randomWords[i]);
             }
+
+            if (examinationWords.Count == 16) break;
+        }
+        //Level5　の単語を4個追加
+        for(int i=0; i<GameManager.instance.words.Count; i++)
+        {
+            if (randomWords[i].level == 5)
+            {
+                examinationWords.Add(randomWords[i]);
+            }
+
+            if (examinationWords.Count == 20) break;
         }
         examinationWordsCount = examinationWords.Count;
     }
 
     public void UpdateQuestion()
     {
-        if(examinationWordsCount <= currentQuestionNumber)
+        if (examinationWordsCount <= currentQuestionNumber)
         {
             return;
         }
+
+        countDown = timeLimit;
 
         questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
 
@@ -144,7 +164,7 @@ public class ExaminationManager : MonoBehaviour
 
         japaneseText.text = answerWord.japanese;
 
-        for(int i=0; i<wordButtons.Count; i++)
+        for (int i = 0; i < wordButtons.Count; i++)
         {
             wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
 
@@ -177,8 +197,6 @@ public class ExaminationManager : MonoBehaviour
     {
         if (answeredCorrectly)
         {
-            score++;
-
             circleSignImage.SetActive(true);
         }
         else
@@ -210,20 +228,13 @@ public class ExaminationManager : MonoBehaviour
 
         currentQuestionNumber++;
 
-        if(currentQuestionNumber < examinationWordsCount)
+        if (currentQuestionNumber < examinationWordsCount)
         {
             UpdateQuestion();
         }
         else
         {
-            ExaminationResultManager.instance.ShowResult(score, examinationWordsCount, examinationLevel);
-            GameManager.instance.ShowExaminationResultPage();
+            GameManager.instance.ShowMenuPage();
         }
-    }
-
-    public void SetExaminationLevel(ExaminationLevel level)
-    {
-        //Debug.Log(level);
-        examinationLevel = level;
     }
 }

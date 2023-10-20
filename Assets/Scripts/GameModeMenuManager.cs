@@ -18,6 +18,13 @@ public class GameModeMenuManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("BossButton")]
+    private GameObject bossButton
+    {
+        get;
+        set;
+    }
+
     private void Awake()
     {
         CreateInstance();
@@ -26,6 +33,7 @@ public class GameModeMenuManager : MonoBehaviour
     private void Start()
     {
         levelButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowLevelMenuPage);
+        bossButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowBossPage);
     }
 
     private void CreateInstance()

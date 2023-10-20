@@ -111,6 +111,13 @@ public class GameManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("BossPage")]
+    private GameObject bossPage
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("LeftButton")]
     private GameObject leftButton
     {
@@ -129,11 +136,11 @@ public class GameManager : MonoBehaviour
     {
         CreateInstance();
         Initialize();
-        SetAllPagesActive(true);
     }
 
     private void Start()
     {
+        SetAllPagesActive(true);
         SetAllPagesActive(false);
         ShowTitlePage();
     }
@@ -181,6 +188,7 @@ public class GameManager : MonoBehaviour
         gameModeMenuPage.SetActive(active);
         examinationMenuPage.SetActive(active);
         levelMenuPage.SetActive(active);
+        bossPage.SetActive(active);
     }
 
     public void Play()
@@ -394,6 +402,17 @@ public class GameManager : MonoBehaviour
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowGameModeMenuPage);
         leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowBossPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = bossPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(false);
 
         rightButton.SetActive(false);
     }
