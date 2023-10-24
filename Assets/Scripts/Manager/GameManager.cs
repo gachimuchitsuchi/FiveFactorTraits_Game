@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
     {
         SetAllPagesActive(true);
         SetAllPagesActive(false);
-        ShowTitlePage();
+        ShowMenuPage();
     }
 
     private void CreateInstance()

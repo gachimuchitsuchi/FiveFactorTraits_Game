@@ -17,10 +17,23 @@ public class BossManager : MonoBehaviour
     private const float timeLimit = 10.0f;
     private float countDown;
 
+    private int mistakeCount;
+    private const int maxMistakeCount = 2;
+    private int life;
+
     private List<Word> examinationWords;
     private int examinationWordsCount;
 
     private int currentQuestionNumber;
+
+    private Vector2 initJapaneseTextScale = new Vector2(1.0f, 1.0f);
+
+    [field: SerializeField, RenameField("Word Prefab")]
+    private GameObject wordPrefab
+    {
+        get;
+        set;
+    }
 
     [field: SerializeField, RenameField("Question Number Text")]
     private TextMeshProUGUI questionNumberText
@@ -50,6 +63,13 @@ public class BossManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("GameOverPanel")]
+    private GameObject gameOverPanel
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("Circle Sign Image")]
     private GameObject circleSignImage
     {
@@ -69,6 +89,17 @@ public class BossManager : MonoBehaviour
         CreateInstance();
     }
 
+    private void Start()
+    {
+        GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+        GameObject menuButton = gameOverPanel.transform.Find("MenuButton").gameObject;
+        GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
+
+        retryButton.GetComponent<Button>().onClick.AddListener(Retry);
+        menuButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowMenuPage);
+        gameOverText.SetActive(false);
+    }
+
     private void OnEnable()
     {
         Initialize();
@@ -79,12 +110,14 @@ public class BossManager : MonoBehaviour
         if(countDown > 0)
         {
             countDown -= Time.deltaTime;
+            japaneseText.transform.localScale *= 1.0005f;
             timeText.text = "TIME" + " " + countDown.ToString("f1");
         }
         if (countDown < 0)
         {
             countDown = 0;
             timeText.text = "TIME" + " " + countDown.ToString("f1");
+            StartCoroutine("GameOver");
             Debug.Log("0秒です");
         }
     }
@@ -101,6 +134,8 @@ public class BossManager : MonoBehaviour
     {
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
+        life = 3;
+        gameOverPanel.SetActive(false);
 
         InitializeWords();
         UpdateQuestion();
@@ -154,7 +189,9 @@ public class BossManager : MonoBehaviour
             return;
         }
 
+        japaneseText.transform.localScale = initJapaneseTextScale;
         countDown = timeLimit;
+        mistakeCount = 0;
 
         questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
 
@@ -166,13 +203,16 @@ public class BossManager : MonoBehaviour
 
         for (int i = 0; i < wordButtons.Count; i++)
         {
+            int index = i;
             wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
+            ColorBlock colorblock = wordButtons[i].GetComponent<Button>().colors;
 
             if (i == answerWordNumber)
             {
                 wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
                 wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
-                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true)));
+                colorblock.disabledColor = Color.green;
+                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true, wordButtons[index])));
             }
             else
             {
@@ -187,23 +227,37 @@ public class BossManager : MonoBehaviour
                 dummyWords.Add(dummyWord);
 
                 wordButtons[i].GetComponent<WordButtonBehaviour>().word = dummyWord;
-                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false)));
+                colorblock.disabledColor = Color.red;
+                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false, wordButtons[index])));
             }
             wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateWord();
+            wordButtons[i].GetComponent<Button>().colors = colorblock;
         }
     }
 
-    private IEnumerator ShowAnswer(bool answeredCorrectly)
+    private IEnumerator ShowAnswer(bool answeredCorrectly, GameObject pushWordButton)
     {
         if (answeredCorrectly)
         {
             circleSignImage.SetActive(true);
+            countDown = 0;
         }
         else
         {
-            crossSignImage.SetActive(true);
+            mistakeCount++;
+            pushWordButton.GetComponent<Image>().color = Color.red;
+            pushWordButton.GetComponent<Button>().interactable = false;
+            if (mistakeCount < maxMistakeCount)
+            {
+                yield break;
+            }else if(mistakeCount == maxMistakeCount)
+            {
+                life--;
+                StartCoroutine("GameOver");
+                yield break;
+            }
         }
-
+        
         foreach (GameObject wordButton in wordButtons)
         {
             if (wordButton.GetComponent<WordButtonBehaviour>().isAnswer)
@@ -219,11 +273,11 @@ public class BossManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         circleSignImage.SetActive(false);
-        crossSignImage.SetActive(false);
 
         foreach (GameObject wordButton in wordButtons)
         {
             wordButton.GetComponent<Image>().color = Color.white;
+            wordButton.GetComponent<Button>().interactable = true;
         }
 
         currentQuestionNumber++;
@@ -235,6 +289,57 @@ public class BossManager : MonoBehaviour
         else
         {
             GameManager.instance.ShowMenuPage();
+        }
+    }
+
+    private void Retry()
+    {
+        currentQuestionNumber++;
+        UpdateQuestion();
+        gameOverPanel.SetActive(false);
+    }
+
+    private IEnumerator GameOver()
+    {
+        countDown = 0;
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Button>().interactable = false;
+        }
+
+        gameObject.GetComponent<ShakeByRandom>().StartShake(1.0f, 1.0f, 1.0f);
+
+        yield return new WaitForSeconds(1.5f);
+
+        gameOverPanel.GetComponent<AnimatedDialog>().Open();
+
+        //ワードのボードをゲームオーバーパネルの子階層に作成
+        GameObject wordElement = Instantiate(wordPrefab, gameOverPanel.transform);
+
+        for(int i=0; i<wordButtons.Count; i++)
+        {
+            if (wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer)
+            {
+                wordElement.GetComponent<WordBehaviour>().word = wordButtons[i].GetComponent<WordButtonBehaviour>().word;
+                wordElement.GetComponent<WordBehaviour>().UpdateWord();
+            }
+        }
+
+        if (life == 0) 
+        {
+            GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+            GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
+
+            retryButton.SetActive(false);
+            gameOverText.SetActive(true);
+        }
+
+        
+
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Image>().color = Color.white;
+            wordButton.GetComponent<Button>().interactable = true;
         }
     }
 }
