@@ -33,6 +33,8 @@ public class LevelMenuManager : MonoBehaviour
         set;
     }
 
+    private const int NUMBER_OF_LEVELS = 5;
+
     [field: SerializeField, RenameField("LevelButtons")]
     private List<GameObject> levelButtons
     {
@@ -49,8 +51,8 @@ public class LevelMenuManager : MonoBehaviour
     private void Awake()
     {
         CreateInstance();
-        isCorrectLevelsAllWords = new List<bool>(5);
-        for(int i=0; i<5; i++)
+        isCorrectLevelsAllWords = new List<bool>(NUMBER_OF_LEVELS);
+        for(int i=0; i<NUMBER_OF_LEVELS; i++)
         {
             if (i == 0) isCorrectLevelsAllWords.Add(true);
             else isCorrectLevelsAllWords.Add(false);

@@ -14,19 +14,17 @@ public class BossManager : MonoBehaviour
         private set;
     }
 
-    private const float timeLimit = 10.0f;
-    private float countDown;
+    private CountDown countDown;
 
     private int mistakeCount;
-    private const int maxMistakeCount = 2;
+    private const int MAX_MISTAKE_COUNT = 2;
     private int life;
+    private const int MAX_LIFE = 3;
 
     private List<Word> examinationWords;
     private int examinationWordsCount;
 
     private int currentQuestionNumber;
-
-    private Vector2 initJapaneseTextScale = new Vector2(1.0f, 1.0f);
 
     [field: SerializeField, RenameField("Word Prefab")]
     private GameObject wordPrefab
@@ -51,6 +49,13 @@ public class BossManager : MonoBehaviour
 
     [field: SerializeField, RenameField("TimeText")]
     private TextMeshProUGUI timeText
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("LifeText")]
+    private TextMeshProUGUI lifeText
     {
         get;
         set;
@@ -87,6 +92,9 @@ public class BossManager : MonoBehaviour
     private void Awake()
     {
         CreateInstance();
+
+        countDown = GetComponent<CountDown>();
+        SetCountDownEvent();
     }
 
     private void Start()
@@ -105,21 +113,10 @@ public class BossManager : MonoBehaviour
         Initialize();
     }
 
+    
     private void Update()
     {
-        if(countDown > 0)
-        {
-            countDown -= Time.deltaTime;
-            japaneseText.transform.localScale *= 1.0005f;
-            timeText.text = "TIME" + " " + countDown.ToString("f1");
-        }
-        if (countDown < 0)
-        {
-            countDown = 0;
-            timeText.text = "TIME" + " " + countDown.ToString("f1");
-            StartCoroutine("GameOver");
-            Debug.Log("0秒です");
-        }
+        timeText.text = "TIME" + " " + countDown.GetTime().ToString("f1");
     }
 
     private void CreateInstance()
@@ -134,11 +131,17 @@ public class BossManager : MonoBehaviour
     {
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
-        life = 3;
+        life = MAX_LIFE;
+        lifeText.text = "×" + life;
         gameOverPanel.SetActive(false);
 
         InitializeWords();
         UpdateQuestion();
+    }
+
+    private void SetCountDownEvent()
+    {
+        countDown.countZeroEvent += PlayGameOverCoroutine;
     }
 
     private void InitializeWords()
@@ -189,8 +192,9 @@ public class BossManager : MonoBehaviour
             return;
         }
 
-        japaneseText.transform.localScale = initJapaneseTextScale;
-        countDown = timeLimit;
+        lifeText.text = "×" + (life-1);
+        countDown.StartCountDown();
+        japaneseText.GetComponent<ChangeUISize>().StartEnlarge();
         mistakeCount = 0;
 
         questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
@@ -240,20 +244,20 @@ public class BossManager : MonoBehaviour
         if (answeredCorrectly)
         {
             circleSignImage.SetActive(true);
-            countDown = 0;
+            japaneseText.GetComponent<ChangeUISize>().StopEnlarge();
+            countDown.StopCountDown();
         }
         else
         {
             mistakeCount++;
             pushWordButton.GetComponent<Image>().color = Color.red;
             pushWordButton.GetComponent<Button>().interactable = false;
-            if (mistakeCount < maxMistakeCount)
+            if (mistakeCount < MAX_MISTAKE_COUNT)
             {
                 yield break;
-            }else if(mistakeCount == maxMistakeCount)
+            }else if(mistakeCount == MAX_MISTAKE_COUNT)
             {
-                life--;
-                StartCoroutine("GameOver");
+                PlayGameOverCoroutine();
                 yield break;
             }
         }
@@ -299,9 +303,17 @@ public class BossManager : MonoBehaviour
         gameOverPanel.SetActive(false);
     }
 
+    private void PlayGameOverCoroutine()
+    {
+        StartCoroutine("GameOver");
+    }
+
     private IEnumerator GameOver()
     {
-        countDown = 0;
+        life--;
+        japaneseText.GetComponent<ChangeUISize>().StopEnlarge();
+        countDown.StopCountDown();
+
         foreach (GameObject wordButton in wordButtons)
         {
             wordButton.GetComponent<Button>().interactable = false;
@@ -313,7 +325,7 @@ public class BossManager : MonoBehaviour
 
         gameOverPanel.GetComponent<AnimatedDialog>().Open();
 
-        //ワードのボードをゲームオーバーパネルの子階層に作成
+        //ワードボードをゲームオーバーパネルの子階層に作成
         GameObject wordElement = Instantiate(wordPrefab, gameOverPanel.transform);
 
         for(int i=0; i<wordButtons.Count; i++)
@@ -333,8 +345,6 @@ public class BossManager : MonoBehaviour
             retryButton.SetActive(false);
             gameOverText.SetActive(true);
         }
-
-        
 
         foreach (GameObject wordButton in wordButtons)
         {
