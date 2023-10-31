@@ -43,4 +43,5 @@ public class WordButtonBehaviour : MonoBehaviour
             wordText.text = word.english;
         }
     }
+
 }

@@ -25,6 +25,13 @@ public class GameModeMenuManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("AchievementButton")]
+    private GameObject achievementButton
+    {
+        get;
+        set;
+    }
+
     private void Awake()
     {
         CreateInstance();
@@ -34,6 +41,7 @@ public class GameModeMenuManager : MonoBehaviour
     {
         levelButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowLevelMenuPage);
         bossButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowBossPage);
+        achievementButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowAchievementPage);
     }
 
     private void CreateInstance()
