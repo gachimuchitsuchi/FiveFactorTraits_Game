@@ -22,6 +22,12 @@ public class Word
         set;
     }
 
+    public bool answeredCorrectly
+    {
+        get;
+        set;
+    }
+
     public Word(string english, string japanese, int level)
     {
         this.english = english;

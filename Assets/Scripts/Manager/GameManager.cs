@@ -143,13 +143,18 @@ public class GameManager : MonoBehaviour
     {
         CreateInstance();
         Initialize();
+        SetAllPagesActive(true);
     }
 
     private void Start()
     {
-        SetAllPagesActive(true);
         SetAllPagesActive(false);
         ShowMenuPage();
+    }
+
+    private void OnApplicationQuit()
+    {
+        //PlayerDataManager.instance.playerData.SaveAllData();
     }
 
     private void CreateInstance()
@@ -183,7 +188,8 @@ public class GameManager : MonoBehaviour
 
     private void SetAllPagesActive(bool active)
     {
-        titlePage.SetActive(active);
+        achievementPage.SetActive(active);
+        //titlePage.SetActive(active);
         playerDataPage.SetActive(active);
         startPage.SetActive(active);
         ffqPage.SetActive(active);
@@ -196,7 +202,6 @@ public class GameManager : MonoBehaviour
         examinationMenuPage.SetActive(active);
         levelMenuPage.SetActive(active);
         bossPage.SetActive(active);
-        achievementPage.SetActive(active);
     }
 
     public void Play()

@@ -42,25 +42,14 @@ public class LevelMenuManager : MonoBehaviour
         set;
     }
 
-    public List<bool> isCorrectLevelsAllWords
-    {
-        get;
-        set;
-    }
-
     private void Awake()
     {
         CreateInstance();
-        isCorrectLevelsAllWords = new List<bool>(NUMBER_OF_LEVELS);
-        for(int i=0; i<NUMBER_OF_LEVELS; i++)
-        {
-            if (i == 0) isCorrectLevelsAllWords.Add(true);
-            else isCorrectLevelsAllWords.Add(false);
-        }
     }
 
     private void Start()
     {
+        //各ボタンにレベルごとのShowExaminationPageを追加
         for (int i = 0; i < levelButtons.Count; i++)
         {
             ExaminationManager.ExaminationLevel num = (ExaminationManager.ExaminationLevel)(i + 1);
@@ -96,8 +85,39 @@ public class LevelMenuManager : MonoBehaviour
             }
             else
             {
-                if(isCorrectLevelsAllWords[i]) levelButtons[i].GetComponent<Button>().interactable = true;
+                if(PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[i]) levelButtons[i].GetComponent<Button>().interactable = true;
             }
         }
+    }
+
+    public static string StringizeIsCorrectAllWordsPerLevel(List<bool> list)
+    {
+        string listString = "";
+
+        foreach(bool flg in list)
+        {
+            string correctly = flg.ToString();
+            listString += correctly + ",";
+        }
+
+        return listString;
+    }
+
+    public static List<bool> DestringizeIsCorrectAllWordsPerLevel(string listString)
+    {
+        List<bool> list = new List<bool>();
+
+        List<string> contents = new List<string>();
+        contents.AddRange(listString.Split(","));
+
+        foreach(string splitContent in contents)
+        {
+            if(splitContent != null && splitContent != "" && !splitContent.Contains("\0"))
+            {
+                list.Add(bool.Parse(splitContent));
+            }
+        }
+
+        return list;
     }
 }

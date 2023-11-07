@@ -36,9 +36,9 @@ public class ExpData
         int exp = 0;
         if(score == maximumScore)
         {
-            if (!LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)])
+            if (!PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[(int)(level)])
             {
-                LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)] = true;
+                PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[(int)(level)] = true;
                 exp += bonusExpDictionary[(int)level];
                 exp += score * (int)level;
             }
@@ -46,7 +46,7 @@ public class ExpData
             {
                 exp += score * (int)level;
             }
-            Debug.Log(LevelMenuManager.instance.isCorrectLevelsAllWords[(int)(level)]);
+            Debug.Log(PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[(int)(level)]);
         }
         else
         {

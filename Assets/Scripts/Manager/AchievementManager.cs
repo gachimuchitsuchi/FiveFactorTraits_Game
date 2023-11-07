@@ -106,4 +106,86 @@ public class AchievementManager : MonoBehaviour
     {
         achievements.FirstOrDefault(n => n.id == id).Unlock();
     }
+
+    //save
+    public static string StringizeCorrectlyAnsweredWords(Dictionary<Word, bool> dictionary)
+    {
+        string dictionaryString = "";
+
+        foreach (KeyValuePair<Word, bool> pair in dictionary)
+        {
+            string word = pair.Key.english;
+            string answeredCorrectly = pair.Value.ToString();
+
+            dictionaryString += word + "," + answeredCorrectly + "|";
+        }
+
+        return dictionaryString;
+    }
+
+    //load
+    public static Dictionary<Word, bool> DestringizeCorrectlyAnsweredWords(string dictionaryString)
+    {
+        Dictionary<Word, bool> dictionary = new Dictionary<Word, bool>();
+
+        List<string> contents = new List<string>();
+        contents.AddRange(dictionaryString.Split('|'));
+
+        foreach (string splitContent in contents)
+        {
+            if (splitContent != null && splitContent != "" && !splitContent.Contains("\0"))
+            {
+                Word word = GameManager.instance.words.First(item => item.english == splitContent.Split(',')[0]);
+                bool answeredCorrectly = bool.Parse(splitContent.Split(',')[1]);
+
+                if (word != null)
+                {
+                    dictionary.Add(word, answeredCorrectly);
+                }
+            }
+        }
+
+        return dictionary;
+    }
+
+    //save åãçá
+    public static string StringizeUnlockedAchievements(Dictionary<Achievement, bool> dictionary)
+    {
+        string dictionaryString = "";
+
+        foreach (KeyValuePair<Achievement, bool> pair in dictionary)
+        {
+            string word = pair.Key.name;
+            string unlocked = pair.Value.ToString();
+
+            dictionaryString += word + "," + unlocked + "|";
+        }
+
+        return dictionaryString;
+    }
+
+    //load ï™â
+    public static Dictionary<Achievement, bool> DestringizeUnlockedAchievements(string dictionaryString)
+    {
+        Dictionary<Achievement, bool> dictionary = new Dictionary<Achievement, bool>();
+
+        List<string> contents = new List<string>();
+        contents.AddRange(dictionaryString.Split('|'));
+
+        foreach (string splitContent in contents)
+        {
+            if (splitContent != null && splitContent != "" && !splitContent.Contains("\0"))
+            {
+                Achievement achievement = AchievementManager.instance.achievements.First(item => item.name == splitContent.Split(',')[0]);
+                bool unlocked = bool.Parse(splitContent.Split(',')[1]);
+
+                if (achievement != null)
+                {
+                    dictionary.Add(achievement, unlocked);
+                }
+            }
+        }
+
+        return dictionary;
+    }
 }
