@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         private set;
     }
 
-    private const string wordsFilePath = "Data/wordsTest";
+    private const string wordsFilePath = "Data/words";
 
     public GameObject currentPage
     {
@@ -149,12 +149,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetAllPagesActive(false);
-        ShowMenuPage();
+        ShowTitlePage();
     }
 
     private void OnApplicationQuit()
     {
-        //PlayerDataManager.instance.playerData.SaveAllData();
+        PlayerDataManager.instance.playerData.SaveAllData();
     }
 
     private void CreateInstance()
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour
                 ShowMenuPage();
                 break;
             case PlayerData.GamePhase.FinalExamination:
-                ShowExaminationPage(0);
+                ShowExaminationPage(ExaminationManager.ExaminationLevel.All);
                 break;
             case PlayerData.GamePhase.Completed:
                 break;

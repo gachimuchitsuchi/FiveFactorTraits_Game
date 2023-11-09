@@ -24,6 +24,19 @@ public class PlayerData
         get;
         set;
     }
+    
+    public int scoreBeforeLearning
+    {
+        get;
+        set;
+    }
+
+    public int scoreAfterLearning
+    {
+        get;
+        set;
+    }
+
 
     public GamePhase gamePhase
     {
@@ -72,6 +85,9 @@ public class PlayerData
         {
             playerTypePercentages.Add(playerType, PlayerPrefs.GetInt(playerType + "Percentage", 0));
         }
+
+        scoreBeforeLearning = PlayerPrefs.GetInt("Score Before Learning", 0);
+        scoreAfterLearning = PlayerPrefs.GetInt("Score After Learning", 0);
 
         gamePhase = (GamePhase)PlayerPrefs.GetInt("Game Phase", (int)GamePhase.FirstExamination);
 
@@ -139,6 +155,9 @@ public class PlayerData
         {
             PlayerPrefs.SetInt(playerType + "Percentage", playerTypePercentages[playerType]);
         }
+
+        PlayerPrefs.SetInt("Score Before Learning", scoreBeforeLearning);
+        PlayerPrefs.SetInt("Score After Learning", scoreAfterLearning);
 
         PlayerPrefs.SetInt("Game Phase", (int)gamePhase);
 

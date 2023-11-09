@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -17,6 +19,8 @@ public class PlayerDataManager : MonoBehaviour
         get;
         private set;
     }
+
+    private const string playerDataFileName = "player_data.csv";
 
     [field: SerializeField, RenameField("Player Name Text")]
     private TextMeshProUGUI playerNameText
@@ -131,5 +135,29 @@ public class PlayerDataManager : MonoBehaviour
             challengePercentageText.text = "-";
         }
         
+    }
+
+    public void SaveCsvPlayerData()
+    {
+        string filePath = Application.persistentDataPath + "/" + playerDataFileName;
+
+        using(StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+        {
+            writer.WriteLine("プレイヤーデータ");
+            writer.WriteLine("");
+            writer.WriteLine("学習者:" + playerData.playerName);
+            writer.WriteLine("日付:" + DateTime.Now);
+            writer.WriteLine("");
+            writer.WriteLine("美的志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Aesthietic] + "%");
+            writer.WriteLine("物語志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Narrative] + "%");
+            writer.WriteLine("目標志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Goal] + "%");
+            writer.WriteLine("挑戦志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Challenge] + "%");
+            writer.WriteLine("社会的志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Social] + "%");
+            writer.WriteLine("");
+            writer.WriteLine("学習前テスト点数:" + playerData.scoreBeforeLearning + "点");
+            writer.WriteLine("学習後テスト点数" + playerData.scoreAfterLearning + "点");
+            writer.WriteLine("");
+            writer.WriteLine("最終レベル:" + playerData.level);
+        }
     }
 }

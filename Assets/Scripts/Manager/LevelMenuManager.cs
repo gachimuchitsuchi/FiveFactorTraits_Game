@@ -6,6 +6,16 @@ using TMPro;
 
 public class LevelMenuManager : MonoBehaviour
 {
+    private enum CursorTarget
+    {
+        Nothing,
+        Level1Button,
+        Level2Button,
+        Level3Button,
+        Level4Button,
+        Level5Button
+    }
+
     public static LevelMenuManager instance
     {
         get;
@@ -37,6 +47,13 @@ public class LevelMenuManager : MonoBehaviour
 
     [field: SerializeField, RenameField("LevelButtons")]
     private List<GameObject> levelButtons
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("DescriptionText")]
+    private TextMeshProUGUI descriptionText
     {
         get;
         set;
@@ -76,6 +93,8 @@ public class LevelMenuManager : MonoBehaviour
         playerNameText.text = PlayerDataManager.instance.playerData.playerName;
         playerExpText.text = "Exp" + PlayerDataManager.instance.playerData.exp;
 
+        descriptionText.text = "";
+
         for(int i=0; i < levelButtons.Count; i++)
         {
             int buttonLevel = i + 1;
@@ -87,6 +106,35 @@ public class LevelMenuManager : MonoBehaviour
             {
                 if(PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[i]) levelButtons[i].GetComponent<Button>().interactable = true;
             }
+        }
+    }
+
+    public void ShowDescription(int cursorTarget)
+    {
+        switch ((CursorTarget)cursorTarget)
+        {
+            case CursorTarget.Nothing:
+                descriptionText.text = "";
+                break;
+            case CursorTarget.Level1Button:
+                descriptionText.text = "レベル1の英単語を学習します";
+                break;
+            case CursorTarget.Level2Button:
+                if (levelButtons[1].GetComponent<Button>().interactable) descriptionText.text = "レベル2の英単語を学習します";
+                else descriptionText.text = "プレイヤーレベルを2以上&レベル1のテストを満点で解放";
+                break;
+            case CursorTarget.Level3Button:
+                if (levelButtons[2].GetComponent<Button>().interactable) descriptionText.text = "レベル3の英単語を学習します";
+                else descriptionText.text = "プレイヤーレベルを3以上&レベル2のテストを満点で解放";
+                break;
+            case CursorTarget.Level4Button:
+                if (levelButtons[3].GetComponent<Button>().interactable) descriptionText.text = "レベル4の英単語を学習します";
+                else descriptionText.text = "プレイヤーレベルを4以上&レベル3のテストを満点で解放";
+                break;
+            case CursorTarget.Level5Button:
+                if (levelButtons[4].GetComponent<Button>().interactable) descriptionText.text = "レベル5の英単語を学習します";
+                else descriptionText.text = "プレイヤーレベルを5以上&レベル4のテストを満点で開放";
+                break;
         }
     }
 

@@ -52,6 +52,7 @@ public class ExaminationResultManager : MonoBehaviour
             expData = new ExpData();
         }
     }
+
     public void ShowResult(int score, int maximumScore, ExaminationManager.ExaminationLevel level)
     {
         scoreText.text = score.ToString();
@@ -71,18 +72,21 @@ public class ExaminationResultManager : MonoBehaviour
             }
         }
 
-        SaveResult();
+        SaveResult(score);
     }
 
-    private void SaveResult()
+    private void SaveResult(int score)
     {
         if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FirstExamination)
         {
             PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FiveFactorQuestion;
+            PlayerDataManager.instance.playerData.scoreBeforeLearning = score;
         }
         else if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FinalExamination)
         {
             PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.Completed;
+            PlayerDataManager.instance.playerData.scoreAfterLearning = score;
+            PlayerDataManager.instance.SaveCsvPlayerData();
         }
     }
 }
