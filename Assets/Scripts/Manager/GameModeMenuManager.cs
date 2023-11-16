@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,6 +54,11 @@ public class GameModeMenuManager : MonoBehaviour
         CreateInstance();
     }
 
+    private void OnEnable()
+    {
+        ShowButton();
+    }
+
     private void Start()
     {
         InitializeUI();
@@ -73,6 +79,38 @@ public class GameModeMenuManager : MonoBehaviour
         achievementButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowAchievementPage);
 
         descriptionText.text = "";
+    }
+
+    private void ShowButton()
+    {
+        achievementButton.SetActive(false);
+        levelButton.SetActive(false);
+        bossButton.SetActive(false);
+
+
+        foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+        {
+            if (PlayerDataManager.instance.playerData.isActiveGameElements[playerType])
+            {
+                switch (playerType)
+                {
+                    case FiveFactorQuestionManager.PlayerType.Aesthietic:
+
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Narrative:
+                        achievementButton.SetActive(true);
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Goal:
+                        levelButton.SetActive(true);
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Challenge:
+                        bossButton.SetActive(true);
+                        break;
+                    case FiveFactorQuestionManager.PlayerType.Social:
+                        break;
+                }
+            }
+        }
     }
 
     public void ShowDescription(int cursorTarget)

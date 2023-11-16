@@ -45,7 +45,6 @@ public class AchievementManager : MonoBehaviour
     private void OnEnable()
     {
         ShowAchivements();
-        UnlockAchievement(1);
     }
 
     private void CreateInstance()

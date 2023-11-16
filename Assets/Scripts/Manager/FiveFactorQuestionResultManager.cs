@@ -81,5 +81,17 @@ public class FiveFactorQuestionResultManager : MonoBehaviour
     {
         PlayerDataManager.instance.playerData.playerTypePercentages = playerTypePercentages;
         PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.Learning;
+
+        foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+        {
+            if (playerTypePercentages[playerType] >= 70)
+            {
+                PlayerDataManager.instance.playerData.isActiveGameElements[playerType] =  true;
+            }
+            else
+            {
+                PlayerDataManager.instance.playerData.isActiveGameElements[playerType] = false;
+            }
+        }
     }
 }

@@ -22,6 +22,11 @@ public class AnimatedDialog : MonoBehaviour
     // アニメーション中かどうか
     public bool IsTransition { get; private set; }
 
+    public void SetIsFirstExamination(bool flg)
+    {
+        _animator.SetBool("IsFirstExamination", flg);
+    }
+
     // ダイアログを開く
     public void Open()
     {

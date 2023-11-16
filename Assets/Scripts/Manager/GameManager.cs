@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         private set;
     }
 
-    private const string wordsFilePath = "Data/words";
+    private const string wordsFilePath = "Data/wordsTest";
 
     public GameObject currentPage
     {
@@ -307,10 +307,7 @@ public class GameManager : MonoBehaviour
 
         leftButton.SetActive(false);
 
-        rightButton.SetActive(true);
-        rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rightButton.GetComponent<Button>().onClick.AddListener(ShowExaminationResultPage);
-        rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
+        rightButton.SetActive(false);
     }
 
     public void ShowExaminationResultPage()

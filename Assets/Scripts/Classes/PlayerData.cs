@@ -24,6 +24,12 @@ public class PlayerData
         get;
         set;
     }
+
+    public Dictionary<FiveFactorQuestionManager.PlayerType, bool> isActiveGameElements
+    {
+        get;
+        set;
+    }
     
     public int scoreBeforeLearning
     {
@@ -63,11 +69,19 @@ public class PlayerData
         set;
     }
 
+    public int examinationTakeCount
+    {
+        get;
+        set;
+    }
+
     public Dictionary<Achievement, bool> unlockedAchievements
     {
         get;
         set;
     }
+
+    
 
     public Dictionary<Word, bool> correctlyAnsweredWords
     {
@@ -86,6 +100,19 @@ public class PlayerData
             playerTypePercentages.Add(playerType, PlayerPrefs.GetInt(playerType + "Percentage", 0));
         }
 
+        isActiveGameElements = new Dictionary<FiveFactorQuestionManager.PlayerType, bool>();
+        foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+        {
+            if(playerTypePercentages[playerType] >= 70)
+            {
+                isActiveGameElements.Add(playerType, true);
+            }
+            else
+            {
+                isActiveGameElements.Add(playerType, false);
+            }
+        }
+
         scoreBeforeLearning = PlayerPrefs.GetInt("Score Before Learning", 0);
         scoreAfterLearning = PlayerPrefs.GetInt("Score After Learning", 0);
 
@@ -93,6 +120,8 @@ public class PlayerData
 
         level = PlayerPrefs.GetInt("Level", 1);
         exp = PlayerPrefs.GetInt("Exp", 0);
+
+        examinationTakeCount = PlayerPrefs.GetInt("Examination Take Count", 0);
 
         string savedIsCorrectAllWordsPerLevel = PlayerPrefs.GetString("Correctly All Words Per Level", "");
         if(savedIsCorrectAllWordsPerLevel == "")
@@ -110,24 +139,6 @@ public class PlayerData
             
         }
 
-        string savedCorrectAnsweredWords = PlayerPrefs.GetString("Correctly Answered Words", "");
-        if (savedCorrectAnsweredWords == "")
-        {
-            correctlyAnsweredWords = new Dictionary<Word, bool>();
-            foreach (Word word in GameManager.instance.words)
-            {
-                correctlyAnsweredWords.Add(word, false);
-            }
-        }
-        else
-        {
-            correctlyAnsweredWords = AchievementManager.DestringizeCorrectlyAnsweredWords(savedCorrectAnsweredWords);
-            foreach (Word word in GameManager.instance.words)
-            {
-                word.answeredCorrectly = correctlyAnsweredWords[word];
-            }
-        }
-
         string savedAchievementResult = PlayerPrefs.GetString("Unlocked Achievements", "");
         if (savedAchievementResult == "")
         {
@@ -143,6 +154,24 @@ public class PlayerData
             foreach (Achievement achievement in AchievementManager.instance.achievements)
             {
                 achievement.unlocked = unlockedAchievements[achievement];
+            }
+        }
+
+        string savedCorrectAnsweredWords = PlayerPrefs.GetString("Correctly Answered Words", "");
+        if (savedCorrectAnsweredWords == "")
+        {
+            correctlyAnsweredWords = new Dictionary<Word, bool>();
+            foreach (Word word in GameManager.instance.words)
+            {
+                correctlyAnsweredWords.Add(word, false);
+            }
+        }
+        else
+        {
+            correctlyAnsweredWords = AchievementManager.DestringizeCorrectlyAnsweredWords(savedCorrectAnsweredWords);
+            foreach (Word word in GameManager.instance.words)
+            {
+                word.answeredCorrectly = correctlyAnsweredWords[word];
             }
         }
     }
@@ -163,6 +192,8 @@ public class PlayerData
 
         PlayerPrefs.SetInt("Level", level);
         PlayerPrefs.SetInt("Exp", exp);
+
+        PlayerPrefs.SetInt("Examination Take Count", examinationTakeCount);
 
         PlayerPrefs.SetString("Correctly All Words Per Level", LevelMenuManager.StringizeIsCorrectAllWordsPerLevel(isCorrectAllWordsPerLevel));
 

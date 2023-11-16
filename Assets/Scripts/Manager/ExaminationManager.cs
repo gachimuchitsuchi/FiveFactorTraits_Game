@@ -59,6 +59,20 @@ public class ExaminationManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("Skip Button")]
+    private GameObject skipButton
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("DescriptionPanel")]
+    private GameObject descriptionPanel
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("Circle Sign Image")]
     private GameObject circleSignImage
     {
@@ -78,9 +92,19 @@ public class ExaminationManager : MonoBehaviour
         CreateInstance();
     }
 
+    private void Start()
+    {
+        GameObject descriptionButton = descriptionPanel.transform.Find("StartButton").gameObject;
+
+        descriptionButton.GetComponent<Button>().onClick.AddListener(CloseDescriptionPanel);
+        skipButton.GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false)));
+    }
+
     private void OnEnable()
     {
         Initialize();
+
+        OpenDescriptionPanel();
     }
 
     private void CreateInstance()
@@ -96,6 +120,15 @@ public class ExaminationManager : MonoBehaviour
         score = 0;
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
+
+        if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FirstExamination)
+        {
+            skipButton.SetActive(true);
+        }
+        else
+        {
+            skipButton.SetActive(false);
+        }
 
         InitializeWords();
         UpdateQuestion();
@@ -153,6 +186,7 @@ public class ExaminationManager : MonoBehaviour
                 wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
                 wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
                 wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true)));
+                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => AnswerCorrectWord(answerWord));
             }
             else
             {
@@ -171,10 +205,33 @@ public class ExaminationManager : MonoBehaviour
             }
             wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateWord();
         }
+
+        skipButton.GetComponent<Button>().interactable = true;
+    }
+
+    private void AnswerCorrectWord(Word answeredWord)
+    {
+        GameManager.instance.words.FirstOrDefault(n => n == answeredWord).answeredCorrectly = true;
+        PlayerDataManager.instance.playerData.correctlyAnsweredWords[answeredWord] = true;
+
+        if (15 <= GameManager.instance.words.Count(n => n.answeredCorrectly == true))
+        {
+            AchievementManager.instance.UnlockAchievement(4);
+        }
+        if (35 <= GameManager.instance.words.Count(n => n.answeredCorrectly == true))
+        {
+            AchievementManager.instance.UnlockAchievement(5);
+        }
+        if (50 <= GameManager.instance.words.Count(n => n.answeredCorrectly == true))
+        {
+            AchievementManager.instance.UnlockAchievement(6);
+        }
     }
 
     private IEnumerator ShowAnswer(bool answeredCorrectly)
     {
+        skipButton.GetComponent<Button>().interactable = false;
+
         if (answeredCorrectly)
         {
             score++;
@@ -225,5 +282,25 @@ public class ExaminationManager : MonoBehaviour
     {
         //Debug.Log(level);
         examinationLevel = level;
+    }
+
+    private void OpenDescriptionPanel()
+    {
+        if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FirstExamination)
+        {
+            descriptionPanel.SetActive(true);
+            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirstExamination(true);
+            descriptionPanel.GetComponent<AnimatedDialog>().Open();
+        }
+        else
+        {
+            descriptionPanel.SetActive(false);
+            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirstExamination(false);
+        }
+    }
+
+    private void CloseDescriptionPanel()
+    {
+        descriptionPanel.GetComponent<AnimatedDialog>().Close();
     }
 }

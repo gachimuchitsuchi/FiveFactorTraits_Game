@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class ExaminationMenuManager : MonoBehaviour
 {
+    private enum CursorTarget
+    {
+        Nothing,
+        PracticeButton,
+        FinalButton
+    }
     public static ExaminationMenuManager instance
     {
         get;
@@ -26,6 +32,13 @@ public class ExaminationMenuManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("Description Text")]
+    private TextMeshProUGUI descriptionText
+    {
+        get;
+        set;
+    }
+
     private void Awake()
     {
         CreateInstance();
@@ -33,8 +46,7 @@ public class ExaminationMenuManager : MonoBehaviour
 
     private void Start()
     {
-        practiceExaminationButton.GetComponent<Button>().onClick.AddListener(StartPracticeExamination);
-        finalExaminationButton.GetComponent<Button>().onClick.AddListener(StartFinalExamination);
+        InitializeUI();
     }
 
     private void CreateInstance()
@@ -43,6 +55,14 @@ public class ExaminationMenuManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    private void InitializeUI()
+    {
+        practiceExaminationButton.GetComponent<Button>().onClick.AddListener(StartPracticeExamination);
+        finalExaminationButton.GetComponent<Button>().onClick.AddListener(StartFinalExamination);
+
+        descriptionText.text = "";
     }
 
     private void StartPracticeExamination()
@@ -54,5 +74,21 @@ public class ExaminationMenuManager : MonoBehaviour
     {
         PlayerDataManager.instance.playerData.gamePhase = PlayerData.GamePhase.FinalExamination;
         GameManager.instance.ShowExaminationPage(ExaminationManager.ExaminationLevel.All);
+    }
+
+    public void ShowDescription(int cursorTarget)
+    {
+        switch ((CursorTarget)cursorTarget)
+        {
+            case CursorTarget.Nothing:
+                descriptionText.text = "";
+                break;
+            case CursorTarget.PracticeButton:
+                descriptionText.text = "模擬試験を始めます";
+                break;
+            case CursorTarget.FinalButton:
+                descriptionText.text = "最終試験を始めます\n始めると戻ることができません";
+                break;
+        }
     }
 }

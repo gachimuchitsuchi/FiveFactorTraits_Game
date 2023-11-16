@@ -32,11 +32,31 @@ public class WordBehaviour : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("Checkmark")]
+    private GameObject checkmark
+    {
+        get;
+        set;
+    }
+
     public void UpdateWord()
     {
         englishText.text = word.english;
         japaneseText.text = word.japanese;
         levelText.text = "Lv" + word.level;
 
+        if (!PlayerDataManager.instance.playerData.isActiveGameElements[FiveFactorQuestionManager.PlayerType.Goal])
+        {
+            levelText.text = "";
+        }
+
+        if(word.answeredCorrectly && PlayerDataManager.instance.playerData.isActiveGameElements[FiveFactorQuestionManager.PlayerType.Narrative])
+        {
+            checkmark.SetActive(true);
+        }
+        else
+        {
+            checkmark.SetActive(false);
+        }
     }
 }
