@@ -255,7 +255,7 @@ public class ExaminationManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         circleSignImage.SetActive(false);
         crossSignImage.SetActive(false);
@@ -274,7 +274,7 @@ public class ExaminationManager : MonoBehaviour
         else
         {
             ExaminationResultManager.instance.ShowResult(score, examinationWordsCount, examinationLevel);
-            GameManager.instance.ShowExaminationResultPage();
+            GameManager.instance.ShowExaminationResultPage(examinationLevel);
         }
     }
 

@@ -148,14 +148,14 @@ public class PlayerDataManager : MonoBehaviour
             writer.WriteLine("学習者:" + playerData.playerName);
             writer.WriteLine("日付:" + DateTime.Now);
             writer.WriteLine("");
-            writer.WriteLine("美的志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Aesthietic] + "%");
-            writer.WriteLine("物語志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Narrative] + "%");
-            writer.WriteLine("目標志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Goal] + "%");
-            writer.WriteLine("挑戦志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Challenge] + "%");
-            writer.WriteLine("社会的志向" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Social] + "%");
+            writer.WriteLine("美的志向:" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Aesthietic] + "%");
+            writer.WriteLine("物語志向:" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Narrative] + "%");
+            writer.WriteLine("目標志向:" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Goal] + "%");
+            writer.WriteLine("挑戦志向:" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Challenge] + "%");
+            writer.WriteLine("社会的志向:" + playerData.playerTypePercentages[FiveFactorQuestionManager.PlayerType.Social] + "%");
             writer.WriteLine("");
             writer.WriteLine("学習前テスト点数:" + playerData.scoreBeforeLearning + "点");
-            writer.WriteLine("学習後テスト点数" + playerData.scoreAfterLearning + "点");
+            writer.WriteLine("学習後テスト点数:" + playerData.scoreAfterLearning + "点");
             writer.WriteLine("");
             writer.WriteLine("最終レベル:" + playerData.level);
         }

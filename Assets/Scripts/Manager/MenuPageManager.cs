@@ -58,11 +58,20 @@ public class MenuPageManager : MonoBehaviour
         InitializeUI();
     }
 
+    private void OnEnable()
+    {
+        if (!PlayerDataManager.instance.playerData.isUsingGameElements)
+        {
+            playButton.SetActive(false);
+        }
+    }
+
     private void InitializeUI()
     {
         wordListButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowWordListPage);
         playButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowGameModeMenuPage);
         examinationMenuButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowExaminationMenuPage);
+
 
         descriptionText.text = "";
     }

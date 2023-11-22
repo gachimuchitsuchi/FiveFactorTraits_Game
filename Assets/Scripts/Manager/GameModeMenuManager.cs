@@ -104,7 +104,7 @@ public class GameModeMenuManager : MonoBehaviour
                         levelButton.SetActive(true);
                         break;
                     case FiveFactorQuestionManager.PlayerType.Challenge:
-                        bossButton.SetActive(true);
+                        //bossButton.SetActive(true);
                         break;
                     case FiveFactorQuestionManager.PlayerType.Social:
                         break;

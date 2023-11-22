@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         private set;
     }
 
-    private const string wordsFilePath = "Data/wordsTest";
+    private const string wordsFilePath = "Data/words";
 
     public GameObject currentPage
     {
@@ -78,6 +78,13 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField, RenameField("ExaminationResultPage")]
     private GameObject examinationResultPage
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("ModeSelectionPage")]
+    private GameObject modeSelectionPage
     {
         get;
         set;
@@ -197,6 +204,7 @@ public class GameManager : MonoBehaviour
         menuPage.SetActive(active);
         examinationPage.SetActive(active);
         examinationResultPage.SetActive(active);
+        modeSelectionPage.SetActive(active);
         wordListPage.SetActive(active);
         gameModeMenuPage.SetActive(active);
         examinationMenuPage.SetActive(active);
@@ -294,7 +302,7 @@ public class GameManager : MonoBehaviour
 
         rightButton.SetActive(true);
         rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rightButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
+        rightButton.GetComponent<Button>().onClick.AddListener(ShowModeSelectionPage);
         rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "NEXT";
     }
 
@@ -310,7 +318,7 @@ public class GameManager : MonoBehaviour
         rightButton.SetActive(false);
     }
 
-    public void ShowExaminationResultPage()
+    public void ShowExaminationResultPage(ExaminationManager.ExaminationLevel level)
     {
         currentPage?.SetActive(false);
         currentPage = examinationResultPage;
@@ -332,7 +340,14 @@ public class GameManager : MonoBehaviour
             case PlayerData.GamePhase.Learning:
                 rightButton.SetActive(true);
                 rightButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                rightButton.GetComponent<Button>().onClick.AddListener(ShowMenuPage);
+                if(level == ExaminationManager.ExaminationLevel.All)
+                {
+                    rightButton.GetComponent<Button>().onClick.AddListener(ShowExaminationMenuPage);
+                }
+                else
+                {
+                    rightButton.GetComponent<Button>().onClick.AddListener(ShowLevelMenuPage);
+                }
                 rightButton.GetComponentInChildren<TextMeshProUGUI>().text = "OK";
                 break;
 
@@ -344,6 +359,16 @@ public class GameManager : MonoBehaviour
                 break;
         }
         
+    }
+
+    public void ShowModeSelectionPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = modeSelectionPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(false);
+        rightButton.SetActive(false);
     }
 
     public void ShowMenuPage()
@@ -439,5 +464,10 @@ public class GameManager : MonoBehaviour
         leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
 
         rightButton.SetActive(false);
+    }
+
+    private void CountPlayTime()
+    {
+
     }
 }

@@ -19,6 +19,12 @@ public class PlayerData
         set;
     }
 
+    public bool isUsingGameElements
+    {
+        get;
+        set;
+    }
+
     public Dictionary<FiveFactorQuestionManager.PlayerType, int> playerTypePercentages
     {
         get;
@@ -45,6 +51,12 @@ public class PlayerData
 
 
     public GamePhase gamePhase
+    {
+        get;
+        set;
+    }
+
+    public float playTime
     {
         get;
         set;
@@ -81,8 +93,6 @@ public class PlayerData
         set;
     }
 
-    
-
     public Dictionary<Word, bool> correctlyAnsweredWords
     {
         get;
@@ -93,6 +103,16 @@ public class PlayerData
     public PlayerData()
     {
         playerName = PlayerPrefs.GetString("Player Name", "");
+
+        string savedIsUsingGameElements = PlayerPrefs.GetString("IsUsingGameElements", "");
+        if(savedIsUsingGameElements == "")
+        {
+            isUsingGameElements = true;
+        }
+        else
+        {
+            isUsingGameElements = bool.Parse(savedIsUsingGameElements);
+        }
 
         playerTypePercentages = new Dictionary<FiveFactorQuestionManager.PlayerType, int>();
         foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
@@ -117,6 +137,8 @@ public class PlayerData
         scoreAfterLearning = PlayerPrefs.GetInt("Score After Learning", 0);
 
         gamePhase = (GamePhase)PlayerPrefs.GetInt("Game Phase", (int)GamePhase.FirstExamination);
+
+        playTime = PlayerPrefs.GetFloat("Play Time", 0.0f);
 
         level = PlayerPrefs.GetInt("Level", 1);
         exp = PlayerPrefs.GetInt("Exp", 0);
@@ -180,6 +202,8 @@ public class PlayerData
     {
         PlayerPrefs.SetString("Player Name", playerName);
 
+        PlayerPrefs.SetString("IsUsingGameElements", isUsingGameElements.ToString());
+
         foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
         {
             PlayerPrefs.SetInt(playerType + "Percentage", playerTypePercentages[playerType]);
@@ -190,13 +214,14 @@ public class PlayerData
 
         PlayerPrefs.SetInt("Game Phase", (int)gamePhase);
 
+        PlayerPrefs.SetFloat("Play Time", playTime);
+
         PlayerPrefs.SetInt("Level", level);
         PlayerPrefs.SetInt("Exp", exp);
 
         PlayerPrefs.SetInt("Examination Take Count", examinationTakeCount);
 
         PlayerPrefs.SetString("Correctly All Words Per Level", LevelMenuManager.StringizeIsCorrectAllWordsPerLevel(isCorrectAllWordsPerLevel));
-
         PlayerPrefs.SetString("Correctly Answered Words", AchievementManager.StringizeCorrectlyAnsweredWords(correctlyAnsweredWords));
         PlayerPrefs.SetString("Unlocked Achievements", AchievementManager.StringizeUnlockedAchievements(unlockedAchievements));
     }

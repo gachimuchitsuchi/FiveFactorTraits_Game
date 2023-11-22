@@ -104,6 +104,16 @@ public class AchievementManager : MonoBehaviour
     public void UnlockAchievement(int id)
     {
         achievements.FirstOrDefault(n => n.id == id).Unlock();
+
+        foreach (Achievement achievement in achievements)
+        {
+            if (achievement.id != 12 && !achievement.unlocked)
+            {
+                return;
+            }
+        }
+
+        UnlockAchievement(12);
     }
 
     //save
