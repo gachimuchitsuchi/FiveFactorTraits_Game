@@ -22,9 +22,9 @@ public class AnimatedDialog : MonoBehaviour
     // アニメーション中かどうか
     public bool IsTransition { get; private set; }
 
-    public void SetIsFirstExamination(bool flg)
+    public void SetIsFirst(bool flg)
     {
-        _animator.SetBool("IsFirstExamination", flg);
+        _animator.SetBool("IsFirst", flg);
     }
 
     // ダイアログを開く

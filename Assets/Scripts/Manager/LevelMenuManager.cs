@@ -59,6 +59,20 @@ public class LevelMenuManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("DescriptionButton")]
+    private GameObject descriptionButton
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("DescriptionPanel")]
+    private GameObject descriptionPanel
+    {
+        get;
+        set;
+    }
+
     private void Awake()
     {
         CreateInstance();
@@ -66,6 +80,11 @@ public class LevelMenuManager : MonoBehaviour
 
     private void Start()
     {
+        descriptionButton.GetComponent<Button>().onClick.AddListener(OpenDescriptionPanel);
+
+        GameObject backButton = descriptionPanel.transform.Find("BackButton").gameObject;
+        backButton.GetComponent<Button>().onClick.AddListener(CloseDescriptionPanel);
+
         //各ボタンにレベルごとのShowExaminationPageを追加
         for (int i = 0; i < levelButtons.Count; i++)
         {
@@ -107,6 +126,18 @@ public class LevelMenuManager : MonoBehaviour
                 if(PlayerDataManager.instance.playerData.isCorrectAllWordsPerLevel[i]) levelButtons[i].GetComponent<Button>().interactable = true;
             }
         }
+    }
+
+    private void OpenDescriptionPanel()
+    {
+        descriptionPanel.SetActive(true);
+        descriptionPanel.GetComponent<AnimatedDialog>().Open();
+    }
+
+    private void CloseDescriptionPanel()
+    {
+        descriptionPanel.SetActive(false);
+        descriptionPanel.GetComponent<AnimatedDialog>().Close();
     }
 
     public void ShowDescription(int cursorTarget)

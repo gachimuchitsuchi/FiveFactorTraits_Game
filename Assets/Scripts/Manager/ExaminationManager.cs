@@ -289,13 +289,13 @@ public class ExaminationManager : MonoBehaviour
         if(PlayerDataManager.instance.playerData.gamePhase == PlayerData.GamePhase.FirstExamination)
         {
             descriptionPanel.SetActive(true);
-            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirstExamination(true);
+            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirst(true);
             descriptionPanel.GetComponent<AnimatedDialog>().Open();
         }
         else
         {
             descriptionPanel.SetActive(false);
-            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirstExamination(false);
+            descriptionPanel.GetComponent<AnimatedDialog>().SetIsFirst(false);
         }
     }
 
