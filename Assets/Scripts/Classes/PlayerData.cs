@@ -123,7 +123,7 @@ public class PlayerData
         isActiveGameElements = new Dictionary<FiveFactorQuestionManager.PlayerType, bool>();
         foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
         {
-            if(playerTypePercentages[playerType] >= 70)
+            if(playerTypePercentages[playerType] >= 60)
             {
                 isActiveGameElements.Add(playerType, true);
             }
