@@ -132,6 +132,13 @@ public class GameManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("QuestPage")]
+    private GameObject questPage
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("LeftButton")]
     private GameObject leftButton
     {
@@ -456,6 +463,20 @@ public class GameManager : MonoBehaviour
     {
         currentPage?.SetActive(false);
         currentPage = achievementPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(true);
+        leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        leftButton.GetComponent<Button>().onClick.AddListener(ShowGameModeMenuPage);
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowQuestPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = questPage;
         currentPage?.SetActive(true);
 
         leftButton.SetActive(true);
