@@ -132,8 +132,22 @@ public class GameManager : MonoBehaviour
         set;
     }
 
-    [field: SerializeField, RenameField("QuestPage")]
-    private GameObject questPage
+    [field: SerializeField, RenameField("QuestMenuPage")]
+    private GameObject questMenuPage
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("TypingQuestPage")]
+    private GameObject typingQuestPage
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("TypingQuestResultPage")]
+    private GameObject typingQuestResultPage
     {
         get;
         set;
@@ -211,6 +225,9 @@ public class GameManager : MonoBehaviour
         menuPage.SetActive(active);
         examinationPage.SetActive(active);
         examinationResultPage.SetActive(active);
+        questMenuPage.SetActive(active);
+        typingQuestPage.SetActive(active);
+        typingQuestResultPage.SetActive(active);
         modeSelectionPage.SetActive(active);
         wordListPage.SetActive(active);
         gameModeMenuPage.SetActive(active);
@@ -473,15 +490,43 @@ public class GameManager : MonoBehaviour
         rightButton.SetActive(false);
     }
 
-    public void ShowQuestPage()
+    public void ShowQuestMenuPage()
     {
         currentPage?.SetActive(false);
-        currentPage = questPage;
+        currentPage = questMenuPage;
         currentPage?.SetActive(true);
 
         leftButton.SetActive(true);
         leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
         leftButton.GetComponent<Button>().onClick.AddListener(ShowGameModeMenuPage);
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowTypingQuestPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = typingQuestPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(true);
+        leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        leftButton.GetComponent<Button>().onClick.AddListener(ShowQuestMenuPage);
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowTypingQuestResultPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = typingQuestResultPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(true);
+        leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        leftButton.GetComponent<Button>().onClick.AddListener(ShowQuestMenuPage);
         leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
 
         rightButton.SetActive(false);
