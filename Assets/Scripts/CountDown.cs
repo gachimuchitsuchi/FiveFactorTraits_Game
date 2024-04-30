@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CountDown : MonoBehaviour
 {
-    private const float TIME_LIMIT = 10.0f;
+    public float TIME_LIMIT = 10.0f;
     private float countDown;
     private bool isDoCountDown;
     public event Action countZeroEvent = delegate { };

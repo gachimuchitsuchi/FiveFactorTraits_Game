@@ -81,7 +81,7 @@ public class GameModeMenuManager : MonoBehaviour
 
     private void InitializeUI()
     {
-        questButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowQuestPage);
+        questButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowQuestMenuPage);
         levelButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowLevelMenuPage);
         bossButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowBossPage);
         achievementButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowAchievementPage);

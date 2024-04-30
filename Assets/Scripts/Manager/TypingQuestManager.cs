@@ -2,14 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-
-[Serializable]
-public class Question
-{
-    public string japanese;
-    public string roman;
-}
+using System.Linq;
 
 public class TypingQuestManager : MonoBehaviour
 {
@@ -19,66 +14,120 @@ public class TypingQuestManager : MonoBehaviour
         private set;
     }
 
-    /*[field: SerializeField, RenameField("QuestionText")]
-    private TextMeshProUGUI questionText
+    private CountDown countDown;
+
+    private List<Word> examinationWords;
+    private int examinationWordsCount;
+
+    private int currentQuestionNumber;
+
+    private bool beingMeasured;
+    private float startTime;
+    private float timeScore;
+
+    private  List<char> spell = new List<char>();
+
+    private int spellIndex;
+
+    [field: SerializeField, RenameField("Question Number Text")]
+    private TextMeshProUGUI questionNumberText
     {
         get;
         set;
-    }*/
-
-    private  List<char> _roman = new List<char>();
-
-    private int _romanIndex;
-
-    [SerializeField] private Question[] questions;
-
-    [SerializeField] private TextMeshProUGUI textJapanese; // ここに日本語表示のTextMeshProをアタッチする。
-    [SerializeField] private TextMeshProUGUI textRoman; // ここにローマ字表示のTextMeshProをアタッチする。
-
-    void InitializeQuestion()
-    {
-        Question question = questions[UnityEngine.Random.Range(0, questions.Length)];
-
-        _roman.Clear();
-
-        _romanIndex = 0;
-
-        char[] characters = question.roman.ToCharArray();
-
-        foreach (char character in characters)
-        {
-            _roman.Add(character);
-        }
-
-        _roman.Add('@');
-
-        textJapanese.text = question.japanese;
-        textRoman.text = GenerateTextRoman();
     }
 
-
-    // Start is called before the first frame update
-    void Start()
+    [field: SerializeField, RenameField("JapaneseText")] 
+    private TextMeshProUGUI japaneseText
     {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("SpellText")] 
+    private TextMeshProUGUI spellText
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("CountDownText")]
+    private GameObject countDownText
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("StartPanel")]
+    private GameObject startPanel
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("QuestionCountToggles")]
+    private List<Toggle> questionCountToggles
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("WarningText")]
+    private TextMeshProUGUI warningText
+    {
+        get;
+        set;
+    }
+
+    private void Start()
+    {
+        countDown = GetComponent<CountDown>();
+        SetCountDownZeroEvent();
+    }
+
+    private void Update()
+    {
+        //カウントダウン切り上げ表記
+        if(!beingMeasured) countDownText.GetComponent<TextMeshProUGUI>().text = Math.Ceiling(countDown.GetTime()).ToString("f0");
+    }
+
+    private void OnEnable()
+    {
+        Initialize();
+        InitializeWords();
         InitializeQuestion();
     }
 
 
     private void OnGUI()
     {
+        if (!beingMeasured)
+        {
+            return;
+        }
+
         if(Event.current.type == EventType.KeyDown)
         {
             switch (InputKey(GetCharFromKeyCode(Event.current.keyCode)))
             {
                 case 1: // 正解タイプ時
-                    _romanIndex++;
-                    if (_roman[_romanIndex] == '@') // 「@」がタイピングの終わりの判定となる。
+                    spellIndex++;
+                    if (spell[spellIndex] == '@') // 「@」がタイピングの終わりの判定となる。
                     {
-                        InitializeQuestion();
+                        currentQuestionNumber++;
+                        if (currentQuestionNumber < examinationWordsCount)
+                        {
+                            UpdateQuestion();
+                        }
+                        else
+                        {
+                            timeScore = Time.time - startTime;
+                            TypingQuestResultManager.instance.ShowResult(timeScore, examinationWordsCount);
+                            GameManager.instance.ShowTypingQuestResultPage();
+                        }
                     }
                     else
                     {
-                        textRoman.text = GenerateTextRoman();
+                        spellText.text = GenerateSpellText();
                     }
                     break;
                 case 2: // ミスタイプ時
@@ -87,26 +136,168 @@ public class TypingQuestManager : MonoBehaviour
         }        
     }
 
-    string GenerateTextRoman()
+    private void Initialize()
+    {
+        startPanel.SetActive(true);
+        countDownText.SetActive(false);
+        warningText.text = "";
+        foreach (Toggle t in questionCountToggles) t.isOn = false;
+
+
+        beingMeasured = false;
+    }
+
+    private void InitializeWords()
+    {
+        examinationWords = new List<Word>();
+        //ワードリストをランダムに並び変える
+        List<Word> randomWords = GameManager.instance.words.OrderBy(n => Guid.NewGuid()).ToList();
+
+        //試験リスト作成
+        for (int i = 0; i < randomWords.Count; i++)
+        {
+            examinationWords.Add(randomWords[i]);
+        }
+
+        //examinationWordsCount = examinationWords.Count;
+        //Debug.Log(examinationWordsCount);
+    }
+
+    void InitializeQuestion()
+    {
+        currentQuestionNumber = 0;
+        Word question = examinationWords[currentQuestionNumber];
+
+        spell.Clear();
+
+        spellIndex = 0;
+
+        char[] characters = question.english.ToCharArray();
+
+        foreach (char character in characters)
+        {
+            spell.Add(character);
+        }
+
+        spell.Add('@');
+
+        japaneseText.text = question.japanese;
+        spellText.text = GenerateSpellText();
+        questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
+    }
+
+    void UpdateQuestion()
+    {
+        if (examinationWordsCount <= currentQuestionNumber)
+        {
+            return;
+        }
+
+        Word question = examinationWords[currentQuestionNumber];
+
+        spell.Clear();
+
+        spellIndex = 0;
+
+        char[] characters = question.english.ToCharArray();
+
+        foreach (char character in characters)
+        {
+            spell.Add(character);
+        }
+
+        spell.Add('@');
+
+        japaneseText.text = question.japanese;
+        spellText.text = GenerateSpellText();
+        questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
+    }
+
+    public void GameStart()
+    {
+        if (!CheckToggles())
+        {
+            warningText.text = "問題数を選んでください";
+            return;
+        }
+        countDown.StartCountDown();
+        startPanel.SetActive(false);
+        countDownText.SetActive(true);
+        foreach (Toggle t in questionCountToggles) t.isOn = false;
+    }
+
+    public void ChangeColorToggle()
+    {
+        foreach(Toggle t in questionCountToggles)
+        {
+            if (t.isOn)
+            {
+                var newColors = t.colors;
+                newColors.normalColor = Color.red;
+                newColors.highlightedColor = Color.red;
+                newColors.selectedColor = Color.red;
+                t.colors = newColors;
+            }
+            else
+            {
+                var newColors = t.colors;
+                newColors.normalColor = Color.white;
+                newColors.highlightedColor = Color.white;
+                newColors.selectedColor = Color.white;
+                t.colors = newColors;
+            }
+        }
+    }
+
+    private bool CheckToggles()
+    {
+        int i = 1;
+        foreach(Toggle t in questionCountToggles)
+        {
+            if (t.isOn)
+            {
+                examinationWordsCount = i * 10;
+                return true;
+            }
+            else i++;
+        }
+
+        return false;
+    }
+
+    private void SetCountDownZeroEvent()
+    {
+        countDown.countZeroEvent += TypingStart;
+    }
+
+    private void TypingStart()
+    {
+        beingMeasured = true;
+        startTime = Time.time;
+        countDown.StopCountDown();
+        countDownText.SetActive(false);
+    }
+
+    string GenerateSpellText ()
     {
         string text = "<style=typed>";
-        for (int i = 0; i < _roman.Count; i++)
+        for (int i = 0; i < spell.Count; i++)
         {
-            if (_roman[i] == '@')
+            if (spell[i] == '@')
             {
                 break;
             }
 
-            if (i == _romanIndex)
+            if (i == spellIndex)
             {
                 text += "</style><style=untyped>";
             }
 
-            text += _roman[i];
+            text += spell[i];
         }
 
         text += "</style>";
-
+        //Debug.Log(text);
         return text;
     }
 
@@ -117,7 +308,7 @@ public class TypingQuestManager : MonoBehaviour
             return 0;
         }
 
-        if (inputChar == _roman[_romanIndex])
+        if (inputChar == spell[spellIndex])
         {
             return 1;
         }
@@ -235,5 +426,4 @@ public class TypingQuestManager : MonoBehaviour
                 return '\0';
         }
     }
-
 }
