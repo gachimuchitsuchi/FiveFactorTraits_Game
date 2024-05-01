@@ -16,3 +16,4 @@
 この特性が高いプレイヤーは，難しいゲームや困難な挑戦を好む．
 - 社会的志向（Social orientation）
 この特性が高いプレイヤーは，一般に他の人と一緒にプレイすることを好む
+![画像1](https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/fa83c9d5-3979-4578-a754-8e5d63995b02)
