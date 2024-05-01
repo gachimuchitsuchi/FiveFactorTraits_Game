@@ -5,13 +5,13 @@
 ## 特性診断
 特性診断とは，特性論に基づいて提案された 5つのプレイヤー特性に分類分けするための診断手法である．
 5 つのプレイヤー特性
--美的志向（Aesthetic orientation）
+- 美的志向（Aesthetic orientation）
 この特性の高いプレイヤーは景色を楽しむことや綺麗なグラフィック，アートなどを好む．
--物語志向（Narrative orientation）
+- 物語志向（Narrative orientation）
 この特性の高いプレイヤーは，複雑な物語やゲーム内のストーリーを好む．
--目標志向（Goal orientation）
+- 目標志向（Goal orientation）
 この特性が高いプレイヤーは，ゲームを 100％クリアしたり，全てのコレクションを完成したりすることを好む．
--挑戦志向（Challenge orientation）
+- 挑戦志向（Challenge orientation）
 この特性が高いプレイヤーは，難しいゲームや困難な挑戦を好む．
--社会的志向（Social orientation）
+- 社会的志向（Social orientation）
 この特性が高いプレイヤーは，一般に他の人と一緒にプレイすることを好む
