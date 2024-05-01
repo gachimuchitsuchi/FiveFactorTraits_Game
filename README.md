@@ -21,11 +21,11 @@
 これらの5つのプレイヤー特性が好むゲーム要素を調査し、好みのゲーム要素として英単語学習アプリケーションに実装する。
 # 実装した好みのゲーム要素
 室蘭工業大学６８名に特性診断と好みのゲーム要素のアンケートを取り、実装するゲーム要素を選択した。
-- 美的志向（Aesthetic orientation）　クエスト：
-- 物語志向（Narrative orientation）　アチーブメント：
-- 目標志向（Goal orientation）　レベル：
-- 挑戦志向（Challenge orientation）　ボス戦：
-- 社会的志向（Social orientation）　チーム：
+- 美的志向(Aesthetic orientation)　クエスト：
+- 物語志向(Narrative orientation)　アチーブメント：
+- 目標志向(Goal orientation)　     レベル：
+- 挑戦志向(Challenge orientation)　ボス戦：
+- 社会的志向(Social orientation)   チーム：
 ## クエスト
 ## アチーブメント
 ## レベル
