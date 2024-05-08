@@ -82,3 +82,35 @@ delegateを使い、カウントがゼロになったときのイベントを簡
 https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/blob/main/Assets/Scripts/CountDown.cs
 
 # 参考文献
+SpriteのPhysicsShapeを使ってuGUIで自由な形のあたり判定を作る（ボタンのあたり判定）
+https://qiita.com/sune2/items/cf9ef9d197b47b2d7a10
+
+【Unity】TextMesh ProでOutlineなどの設定を複数保持する方法
+https://ekulabo.com/text-mesh-pro-material1
+
+【UnityでRPG製作】レベルアップの実装方法
+https://uuc1h.hatenablog.jp/entry/2021/05/18/233137
+
+【Unity】RPGのレベルシステムの書き方
+https://qiita.com/azumagoro/items/38a735019d5ce5da7526
+
+[Unity]Awake() Start() 実行順序
+https://qiita.com/udonLove/items/fd6c64fcd738dd52f8b6
+
+[Unity]コルーチン中断のやり方
+https://www.hanachiru-blog.com/entry/2019/07/16/213033
+
+【Unity】アニメーションするダイアログの作り方
+https://nekojara.city/unity-animated-dialog
+
+RPGどっと素材
+http://rpgdot3319.g1.xrea.com/muz/002.html
+
+[Unity] UIを拡大　縮小させる方法
+https://c-taquna.hatenablog.com/entry/2018/12/02/003621
+
+[Unity] Unity(C#)でのデリゲート/イベントのつかいかた
+https://aizu-vr.hatenablog.com/entry/2021/08/23/_Unity%28C%23%29%E3%81%A7%E3%81%AE%E3%83%87%E3%83%AA%E3%82%B2%E3%83%BC%E3%83%88/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AE%E3%81%A4%E3%81%8B%E3%81%84%E3%81%8B%E3%81%9F
+
+【Unity】カラーコードとColor型を変換する【C#】
+https://nekosuko.jp/1674/
