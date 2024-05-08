@@ -55,6 +55,10 @@ https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/913e8
 経験値を集め、自身のレベルを上げると次の難しい英単語に挑戦できるようになる。最後のレベルの英単語を暗記するまで、それを繰り返す。
 自身の経験がたまっていくことを実感できるので、やる気と達成感を得られる。
 
+
+https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/c56717dc-8a14-4cff-a819-26b549ce904b
+
+
 ## ボス戦
 挑戦志向のプレイヤーが使用できるゲーム要素。
 漢字でGoを参考に作成した。
