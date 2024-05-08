@@ -129,11 +129,18 @@ public class BossManager : MonoBehaviour
 
     private void Initialize()
     {
+        GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+        GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
+        retryButton.SetActive(true);
+        gameOverText.SetActive(false);
+
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
         life = MAX_LIFE;
         lifeText.text = "Å~" + life;
+
         gameOverPanel.SetActive(false);
+        
 
         InitializeWords();
         UpdateQuestion();
@@ -299,8 +306,8 @@ public class BossManager : MonoBehaviour
     private void Retry()
     {
         currentQuestionNumber++;
+        gameOverPanel.GetComponent<AnimatedDialog>().Close();
         UpdateQuestion();
-        gameOverPanel.SetActive(false);
     }
 
     private void PlayGameOverCoroutine()

@@ -84,7 +84,7 @@ public class GameModeMenuManager : MonoBehaviour
     {
         questButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowQuestMenuPage);
         levelButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowLevelMenuPage);
-        bossButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowBossPage);
+        bossButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowBossMenuPage);
         achievementButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowAchievementPage);
 
         descriptionText.text = "";
@@ -114,7 +114,7 @@ public class GameModeMenuManager : MonoBehaviour
                         levelButton.SetActive(true);
                         break;
                     case FiveFactorQuestionManager.PlayerType.Challenge:
-                        //bossButton.SetActive(true);
+                        bossButton.SetActive(true);
                         break;
                     case FiveFactorQuestionManager.PlayerType.Social:
                         break;
@@ -143,5 +143,14 @@ public class GameModeMenuManager : MonoBehaviour
                 descriptionText.text = "É{ÉXÇì|ÇµÇ»Ç™ÇÁâpíPåÍÇäwèKÇµÇ‹Ç∑";
                 break;
         }
+    }
+
+    //Debugóp
+    public void ShowAllButton()
+    {
+        questButton.SetActive(true);
+        achievementButton.SetActive(true);
+        levelButton.SetActive(true);
+        bossButton.SetActive(true);
     }
 }

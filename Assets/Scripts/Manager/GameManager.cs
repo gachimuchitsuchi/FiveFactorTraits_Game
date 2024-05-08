@@ -118,6 +118,13 @@ public class GameManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("BossMenuPage")]
+    private GameObject bossMenuPage
+    {
+        get;
+        set;
+    }
+
     [field: SerializeField, RenameField("BossPage")]
     private GameObject bossPage
     {
@@ -233,6 +240,7 @@ public class GameManager : MonoBehaviour
         gameModeMenuPage.SetActive(active);
         examinationMenuPage.SetActive(active);
         levelMenuPage.SetActive(active);
+        bossMenuPage.SetActive(active);
         bossPage.SetActive(active);
     }
 
@@ -455,6 +463,20 @@ public class GameManager : MonoBehaviour
     {
         currentPage?.SetActive(false);
         currentPage = levelMenuPage;
+        currentPage?.SetActive(true);
+
+        leftButton.SetActive(true);
+        leftButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        leftButton.GetComponent<Button>().onClick.AddListener(ShowGameModeMenuPage);
+        leftButton.GetComponentInChildren<TextMeshProUGUI>().text = "BACK";
+
+        rightButton.SetActive(false);
+    }
+
+    public void ShowBossMenuPage()
+    {
+        currentPage?.SetActive(false);
+        currentPage = bossMenuPage;
         currentPage?.SetActive(true);
 
         leftButton.SetActive(true);
