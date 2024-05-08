@@ -78,6 +78,6 @@ https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/384da
 ゲームを始める、制限時間を作るときのカウントダウンを簡単に実装できるように作成した。
 delegateを使い、カウントがゼロになったときのイベントを簡単に実装できるようにした。
 
-Assets/Scripts/CountDown.cs
+https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/blob/main/Assets/Scripts/CountDown.cs
 
 # 参考文献
