@@ -45,6 +45,10 @@ https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/a626e
 用意された実績を模擬英単語試験を通して、解除していく。
 実績解除をすることでやる気を上げることができる。
 
+
+https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/913e86d2-f21c-4bf8-ab8f-4de39c0a347b
+
+
 ## レベル
 目標志向のプレイヤーが使用できるゲーム要素。
 レベルが低い英単語から暗記をはじめ、正解していくと経験値を確保できる。
@@ -58,6 +62,12 @@ https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/a626e
 ライフが０になるとゲームオーバーとなる。
 現在はゲーム性の実装だけだが、今後漢字でGoのようにボスのようなキャラクターが攻撃を仕掛けてくる演出や退治する演出を作成する予定
 中ボス、ボスを倒しながら英単語を暗記してもらうことで快感を得ながら楽しく学ぶことができる。
+
+
+
+https://github.com/gachimuchitsuchi/FiveFactorTraits_Game/assets/101007932/384da0dc-b7a4-4402-9306-10c416bc128e
+
+
 
 ## その他ゲーム要素以外に作成した機能
 ### カウントダウンクラス
