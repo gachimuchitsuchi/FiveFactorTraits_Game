@@ -328,6 +328,8 @@ public class BossManager : MonoBehaviour
         //ワードボードをゲームオーバーパネルの子階層に作成
         GameObject wordElement = Instantiate(wordPrefab, gameOverPanel.transform);
 
+
+        //Retry時、次の問題にいくため問題更新
         for(int i=0; i<wordButtons.Count; i++)
         {
             if (wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer)

@@ -21,7 +21,7 @@ public class TypingQuestManager : MonoBehaviour
 
     private int currentQuestionNumber;
 
-    private bool beingMeasured;
+    private bool beingMeasured; //タイピング時間を測るためのフラグ
     private float startTime;
     private float timeScore;
 
@@ -30,21 +30,21 @@ public class TypingQuestManager : MonoBehaviour
     private int spellIndex;
 
     [field: SerializeField, RenameField("Question Number Text")]
-    private TextMeshProUGUI questionNumberText
+    private GameObject questionNumberText
     {
         get;
         set;
     }
 
     [field: SerializeField, RenameField("JapaneseText")] 
-    private TextMeshProUGUI japaneseText
+    private GameObject japaneseText
     {
         get;
         set;
     }
 
     [field: SerializeField, RenameField("SpellText")] 
-    private TextMeshProUGUI spellText
+    private GameObject spellText
     {
         get;
         set;
@@ -94,7 +94,11 @@ public class TypingQuestManager : MonoBehaviour
     {
         Initialize();
         InitializeWords();
-        InitializeQuestion();
+    }
+
+    private void OnDisable()
+    {
+        foreach (Toggle t in questionCountToggles) t.isOn = false;
     }
 
 
@@ -127,7 +131,7 @@ public class TypingQuestManager : MonoBehaviour
                     }
                     else
                     {
-                        spellText.text = GenerateSpellText();
+                        spellText.GetComponent<TextMeshProUGUI>().text = GenerateSpellText();
                     }
                     break;
                 case 2: // ミスタイプ時
@@ -139,12 +143,14 @@ public class TypingQuestManager : MonoBehaviour
     private void Initialize()
     {
         startPanel.SetActive(true);
+        questionNumberText.SetActive(false);
+        japaneseText.SetActive(false);
+        spellText.SetActive(false);
         countDownText.SetActive(false);
         warningText.text = "";
         foreach (Toggle t in questionCountToggles) t.isOn = false;
-
-
         beingMeasured = false;
+        currentQuestionNumber = 0;
     }
 
     private void InitializeWords()
@@ -158,12 +164,9 @@ public class TypingQuestManager : MonoBehaviour
         {
             examinationWords.Add(randomWords[i]);
         }
-
-        //examinationWordsCount = examinationWords.Count;
-        //Debug.Log(examinationWordsCount);
     }
 
-    void InitializeQuestion()
+    /*void InitializeQuestion()
     {
         currentQuestionNumber = 0;
         Word question = examinationWords[currentQuestionNumber];
@@ -181,10 +184,10 @@ public class TypingQuestManager : MonoBehaviour
 
         spell.Add('@');
 
-        japaneseText.text = question.japanese;
-        spellText.text = GenerateSpellText();
-        questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
-    }
+        japaneseText.GetComponent<TextMeshProUGUI>().text = question.japanese;
+        spellText.GetComponent<TextMeshProUGUI>().text = GenerateSpellText();
+        questionNumberText.GetComponent<TextMeshProUGUI>().text = "第" + (currentQuestionNumber + 1) + "問";
+    }*/
 
     void UpdateQuestion()
     {
@@ -208,9 +211,9 @@ public class TypingQuestManager : MonoBehaviour
 
         spell.Add('@');
 
-        japaneseText.text = question.japanese;
-        spellText.text = GenerateSpellText();
-        questionNumberText.text = "第" + (currentQuestionNumber + 1) + "問";
+        japaneseText.GetComponent<TextMeshProUGUI>().text = question.japanese;
+        spellText.GetComponent<TextMeshProUGUI>().text = GenerateSpellText();
+        questionNumberText.GetComponent<TextMeshProUGUI>().text = "第" + (currentQuestionNumber + 1) + "問";
     }
 
     public void GameStart()
@@ -222,8 +225,24 @@ public class TypingQuestManager : MonoBehaviour
         }
         countDown.StartCountDown();
         startPanel.SetActive(false);
+        japaneseText.SetActive(true);
+        spellText.SetActive(true);
         countDownText.SetActive(true);
+        UpdateQuestion();
         foreach (Toggle t in questionCountToggles) t.isOn = false;
+    }
+
+    private void SetCountDownZeroEvent()
+    {
+        countDown.countZeroEvent += TypingStart;
+    }
+
+    private void TypingStart()
+    {
+        beingMeasured = true;
+        startTime = Time.time;
+        countDown.StopCountDown();
+        countDownText.SetActive(false);
     }
 
     public void ChangeColorToggle()
@@ -263,19 +282,6 @@ public class TypingQuestManager : MonoBehaviour
         }
 
         return false;
-    }
-
-    private void SetCountDownZeroEvent()
-    {
-        countDown.countZeroEvent += TypingStart;
-    }
-
-    private void TypingStart()
-    {
-        beingMeasured = true;
-        startTime = Time.time;
-        countDown.StopCountDown();
-        countDownText.SetActive(false);
     }
 
     string GenerateSpellText ()

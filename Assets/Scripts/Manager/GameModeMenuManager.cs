@@ -10,6 +10,7 @@ public class GameModeMenuManager : MonoBehaviour
     private enum CursorTarget
     {
         Nothing,
+        QuestButton,
         AchievementButton,
         LevelButton,
         BossButton,
@@ -91,6 +92,7 @@ public class GameModeMenuManager : MonoBehaviour
 
     private void ShowButton()
     {
+        questButton.SetActive(false);
         achievementButton.SetActive(false);
         levelButton.SetActive(false);
         bossButton.SetActive(false);
@@ -103,7 +105,7 @@ public class GameModeMenuManager : MonoBehaviour
                 switch (playerType)
                 {
                     case FiveFactorQuestionManager.PlayerType.Aesthietic:
-
+                        questButton.SetActive(true);
                         break;
                     case FiveFactorQuestionManager.PlayerType.Narrative:
                         achievementButton.SetActive(true);
@@ -127,6 +129,9 @@ public class GameModeMenuManager : MonoBehaviour
         {
             case CursorTarget.Nothing:
                 descriptionText.text = "";
+                break;
+            case CursorTarget.QuestButton:
+                descriptionText.text = "クエストに挑戦します";
                 break;
             case CursorTarget.AchievementButton:
                 descriptionText.text = "実績を閲覧します";
