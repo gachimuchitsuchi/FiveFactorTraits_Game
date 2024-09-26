@@ -89,6 +89,13 @@ public class BossManager : MonoBehaviour
         set;
     }
 
+    [field: SerializeField, RenameField("Boss Image")]
+    private GameObject bossImage
+    {
+        get;
+        set;
+    }
+
     private void Awake()
     {
         CreateInstance();
@@ -143,7 +150,7 @@ public class BossManager : MonoBehaviour
         
 
         InitializeWords();
-        UpdateQuestion();
+        StartCoroutine(UpdateQuestion());
     }
 
     private void SetCountDownEvent()
@@ -192,12 +199,15 @@ public class BossManager : MonoBehaviour
         examinationWordsCount = examinationWords.Count;
     }
 
-    public void UpdateQuestion()
+    public IEnumerator UpdateQuestion()
     {
         if (examinationWordsCount <= currentQuestionNumber)
         {
-            return;
+            yield break;
         }
+
+        yield return StartCoroutine(AppearBoss());
+        gameObject.GetComponent<ShakeByRandom>().StartShake(0.3f, 0.3f, 0.3f);
 
         lifeText.text = "Å~" + (life-1);
         countDown.StartCountDown();
@@ -244,6 +254,15 @@ public class BossManager : MonoBehaviour
             wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateWord();
             wordButtons[i].GetComponent<Button>().colors = colorblock;
         }
+    }
+
+    private IEnumerator AppearBoss()
+    {
+        bossImage.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        bossImage.SetActive(false);
     }
 
     private IEnumerator ShowAnswer(bool answeredCorrectly, GameObject pushWordButton)
@@ -295,7 +314,7 @@ public class BossManager : MonoBehaviour
 
         if (currentQuestionNumber < examinationWordsCount)
         {
-            UpdateQuestion();
+            StartCoroutine(UpdateQuestion());
         }
         else
         {
@@ -307,7 +326,7 @@ public class BossManager : MonoBehaviour
     {
         currentQuestionNumber++;
         gameOverPanel.GetComponent<AnimatedDialog>().Close();
-        UpdateQuestion();
+        StartCoroutine(UpdateQuestion());
     }
 
     private void PlayGameOverCoroutine()
