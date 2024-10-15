@@ -203,7 +203,7 @@ public class ExaminationManager : MonoBehaviour
                 wordButtons[i].GetComponent<WordButtonBehaviour>().word = dummyWord;
                 wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false)));
             }
-            wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateWord();
+            wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateEnglishWord();
         }
 
         skipButton.GetComponent<Button>().interactable = true;

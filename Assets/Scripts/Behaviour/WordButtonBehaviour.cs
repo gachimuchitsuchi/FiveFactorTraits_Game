@@ -19,6 +19,12 @@ public class WordButtonBehaviour : MonoBehaviour
         set;
     }
 
+    public char spell
+    {
+        get;
+        set;
+    }
+
     public bool isAnswer
     {
         get;
@@ -27,7 +33,7 @@ public class WordButtonBehaviour : MonoBehaviour
 
     private void Awake()
     {
-        UpdateWord();
+        UpdateEnglishWord();
         Initialize();
     }
 
@@ -36,11 +42,27 @@ public class WordButtonBehaviour : MonoBehaviour
         isAnswer = false;
     }
 
-    public void UpdateWord()
+    public void UpdateEnglishWord()
     {
         if (word != null)
         {
             wordText.text = word.english;
+        }
+    }
+
+    public void UpdateJapaneseWord()
+    {
+        if(word != null)
+        {
+            wordText.text = word.japanese;
+        }
+    }
+
+    public void UpdateSpell()
+    {
+        if(spell != ' ')
+        {
+            wordText.text = spell.ToString();
         }
     }
 

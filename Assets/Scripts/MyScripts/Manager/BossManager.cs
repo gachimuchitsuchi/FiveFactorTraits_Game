@@ -89,12 +89,36 @@ public class BossManager : MonoBehaviour
         set;
     }
 
-    [field: SerializeField, RenameField("Boss Image")]
-    private GameObject bossImage
+    [field: SerializeField, RenameField("Green Monster Image")]
+    private GameObject greenMonsterImage
     {
         get;
         set;
     }
+
+    [field: SerializeField, RenameField("Purple Monster Image")]
+    private GameObject purpleMonsterImage
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("Red Monster Image")]
+    private GameObject redMonsterImage
+    {
+        get;
+        set;
+    }
+
+    private int enemyNumber
+    {
+        get;
+        set;
+    }
+
+    private char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l',
+                               'm','n','o','p','q','r','s','t','u','v','w','x',
+                               'y','z'};
 
     private void Awake()
     {
@@ -113,6 +137,8 @@ public class BossManager : MonoBehaviour
         retryButton.GetComponent<Button>().onClick.AddListener(Retry);
         menuButton.GetComponent<Button>().onClick.AddListener(GameManager.instance.ShowMenuPage);
         gameOverText.SetActive(false);
+
+        enemyNumber = 1;
     }
 
     private void OnEnable()
@@ -145,6 +171,10 @@ public class BossManager : MonoBehaviour
         examinationWordsCount = 0;
         life = MAX_LIFE;
         lifeText.text = "Å~" + life;
+
+        purpleMonsterImage.SetActive(false);
+        greenMonsterImage.SetActive(false);
+        redMonsterImage.SetActive(false);
 
         gameOverPanel.SetActive(false);
         
@@ -206,7 +236,12 @@ public class BossManager : MonoBehaviour
             yield break;
         }
 
-        yield return StartCoroutine(AppearBoss());
+        enemyNumber = UnityEngine.Random.Range(1, 4);
+        Debug.Log(enemyNumber + "teki");
+
+        japaneseText.text = "";
+
+        yield return StartCoroutine(AppearEnemy(enemyNumber));
         gameObject.GetComponent<ShakeByRandom>().StartShake(0.3f, 0.3f, 0.3f);
 
         lifeText.text = "Å~" + (life-1);
@@ -219,50 +254,160 @@ public class BossManager : MonoBehaviour
         Word answerWord = examinationWords[currentQuestionNumber];
         int answerWordNumber = UnityEngine.Random.Range(0, 4);
         List<Word> dummyWords = new List<Word>();
+        List<char> dummySpells = new List<char>();
 
-        japaneseText.text = answerWord.japanese;
-
-        for (int i = 0; i < wordButtons.Count; i++)
+        if(enemyNumber == 1)
         {
-            int index = i;
-            wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
-            ColorBlock colorblock = wordButtons[i].GetComponent<Button>().colors;
+            japaneseText.text = answerWord.japanese;
 
-            if (i == answerWordNumber)
+            for (int i = 0; i < wordButtons.Count; i++)
             {
-                wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
-                wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
-                colorblock.disabledColor = Color.green;
-                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true, wordButtons[index])));
-            }
-            else
-            {
-                wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = false;
+                int index = i;
+                wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
+                ColorBlock colorblock = wordButtons[i].GetComponent<Button>().colors;
 
-                Word dummyWord;
-                do
+                if (i == answerWordNumber)
                 {
-                    dummyWord = GameManager.instance.words[UnityEngine.Random.Range(0, GameManager.instance.words.Count)];
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
+                    colorblock.disabledColor = Color.green;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true, wordButtons[index])));
                 }
-                while (dummyWords.Contains(dummyWord) || dummyWord == answerWord);
-                dummyWords.Add(dummyWord);
+                else
+                {
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = false;
 
-                wordButtons[i].GetComponent<WordButtonBehaviour>().word = dummyWord;
-                colorblock.disabledColor = Color.red;
-                wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false, wordButtons[index])));
+                    Word dummyWord;
+                    do
+                    {
+                        dummyWord = GameManager.instance.words[UnityEngine.Random.Range(0, GameManager.instance.words.Count)];
+                    }
+                    while (dummyWords.Contains(dummyWord) || dummyWord == answerWord);
+                    dummyWords.Add(dummyWord);
+
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().word = dummyWord;
+                    colorblock.disabledColor = Color.red;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false, wordButtons[index])));
+                }
+                wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateEnglishWord();
+                wordButtons[i].GetComponent<Button>().colors = colorblock;
             }
-            wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateWord();
-            wordButtons[i].GetComponent<Button>().colors = colorblock;
         }
+
+        if(enemyNumber == 2)
+        {
+            japaneseText.text = answerWord.english;
+
+            for (int i = 0; i < wordButtons.Count; i++)
+            {
+                int index = i;
+                wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
+                ColorBlock colorblock = wordButtons[i].GetComponent<Button>().colors;
+
+                if (i == answerWordNumber)
+                {
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
+                    colorblock.disabledColor = Color.green;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true, wordButtons[index])));
+                }
+                else
+                {
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = false;
+
+                    Word dummyWord;
+                    do
+                    {
+                        dummyWord = GameManager.instance.words[UnityEngine.Random.Range(0, GameManager.instance.words.Count)];
+                    }
+                    while (dummyWords.Contains(dummyWord) || dummyWord == answerWord);
+                    dummyWords.Add(dummyWord);
+
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().word = dummyWord;
+                    colorblock.disabledColor = Color.red;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false, wordButtons[index])));
+                }
+                wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateJapaneseWord();
+                wordButtons[i].GetComponent<Button>().colors = colorblock;
+            }
+        }
+
+        if(enemyNumber == 3)
+        {
+            string questionText = answerWord.english;
+            int length = questionText.Length;
+            int rndNum = UnityEngine.Random.Range(0,length);
+            char answerSpell = questionText[rndNum];
+            questionText = questionText.Replace(answerSpell, 'Å†');
+
+            japaneseText.text = questionText;
+
+            for (int i = 0; i < wordButtons.Count; i++)
+            {
+                int index = i;
+                wordButtons[i].GetComponent<Button>().onClick.RemoveAllListeners();
+                ColorBlock colorblock = wordButtons[i].GetComponent<Button>().colors;
+
+                if (i == answerWordNumber)
+                {
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = true;
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().word = answerWord;
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().spell = answerSpell;
+                    colorblock.disabledColor = Color.green;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(true, wordButtons[index])));
+                }
+                else
+                {
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer = false;
+
+                    char dummySpell;
+                    do
+                    {
+                        dummySpell = alphabet[UnityEngine.Random.Range(0, 26)];
+                    }
+                    while (dummySpells.Contains(dummySpell) || dummySpell == answerSpell);
+                    dummySpells.Add(dummySpell);
+
+                    wordButtons[i].GetComponent<WordButtonBehaviour>().spell = dummySpell;
+                    colorblock.disabledColor = Color.red;
+                    wordButtons[i].GetComponent<Button>().onClick.AddListener(() => StartCoroutine(ShowAnswer(false, wordButtons[index])));
+                }
+                wordButtons[i].GetComponent<WordButtonBehaviour>().UpdateSpell();
+                wordButtons[i].GetComponent<Button>().colors = colorblock;
+            }
+        }
+        
     }
 
-    private IEnumerator AppearBoss()
+    private IEnumerator AppearEnemy(int num)
     {
-        bossImage.SetActive(true);
+        if(num == 1)
+        {
+            purpleMonsterImage.SetActive(true);
 
-        yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
 
-        bossImage.SetActive(false);
+            purpleMonsterImage.SetActive(false);
+        }
+
+        if(num == 2)
+        {
+            greenMonsterImage.SetActive(true);
+
+            yield return new WaitForSeconds(1f);
+
+            greenMonsterImage.SetActive(false);
+        }
+
+        if(num == 3)
+        {
+            redMonsterImage.SetActive(true);
+
+            yield return new WaitForSeconds(1f);
+
+            redMonsterImage.SetActive(false);
+        }
+        
     }
 
     private IEnumerator ShowAnswer(bool answeredCorrectly, GameObject pushWordButton)
