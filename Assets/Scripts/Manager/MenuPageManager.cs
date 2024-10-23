@@ -60,7 +60,14 @@ public class MenuPageManager : MonoBehaviour
 
     private void OnEnable()
     {
+        /*
         if (!PlayerDataManager.instance.playerData.isUsingGameElements)
+        {
+            playButton.SetActive(false);
+        }
+        */
+
+        if(PlayerDataManager.instance.playerData.group == PlayerData.Group.C)
         {
             playButton.SetActive(false);
         }

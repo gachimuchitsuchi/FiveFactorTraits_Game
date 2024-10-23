@@ -13,17 +13,27 @@ public class PlayerData
         FinalExamination,
         Completed
     }
+
+    public enum Group
+    {
+        A,
+        B,
+        C,
+        None
+    }
     public string playerName
     {
         get;
         set;
     }
 
+    /*
     public bool isUsingGameElements
     {
         get;
         set;
     }
+    */
 
     public Dictionary<FiveFactorQuestionManager.PlayerType, int> playerTypePercentages
     {
@@ -49,6 +59,11 @@ public class PlayerData
         set;
     }
 
+    public Group group
+    {
+        get;
+        set;
+    }
 
     public GamePhase gamePhase
     {
@@ -104,6 +119,7 @@ public class PlayerData
     {
         playerName = PlayerPrefs.GetString("Player Name", "");
 
+        /*
         string savedIsUsingGameElements = PlayerPrefs.GetString("IsUsingGameElements", "");
         if(savedIsUsingGameElements == "")
         {
@@ -113,6 +129,7 @@ public class PlayerData
         {
             isUsingGameElements = bool.Parse(savedIsUsingGameElements);
         }
+        */
 
         playerTypePercentages = new Dictionary<FiveFactorQuestionManager.PlayerType, int>();
         foreach(FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
@@ -137,6 +154,7 @@ public class PlayerData
         scoreAfterLearning = PlayerPrefs.GetInt("Score After Learning", 0);
 
         gamePhase = (GamePhase)PlayerPrefs.GetInt("Game Phase", (int)GamePhase.FirstExamination);
+        group = (Group)PlayerPrefs.GetInt("Group", (int)Group.None);
 
         playTime = PlayerPrefs.GetFloat("Play Time", 0.0f);
 
@@ -202,7 +220,7 @@ public class PlayerData
     {
         PlayerPrefs.SetString("Player Name", playerName);
 
-        PlayerPrefs.SetString("IsUsingGameElements", isUsingGameElements.ToString());
+        //PlayerPrefs.SetString("IsUsingGameElements", isUsingGameElements.ToString());
 
         foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
         {
@@ -213,6 +231,7 @@ public class PlayerData
         PlayerPrefs.SetInt("Score After Learning", scoreAfterLearning);
 
         PlayerPrefs.SetInt("Game Phase", (int)gamePhase);
+        PlayerPrefs.SetInt("Group", (int)group);
 
         PlayerPrefs.SetFloat("Play Time", playTime);
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -97,30 +98,62 @@ public class GameModeMenuManager : MonoBehaviour
         levelButton.SetActive(false);
         bossButton.SetActive(false);
 
-
-        foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+        if(PlayerDataManager.instance.playerData.group == PlayerData.Group.A)
         {
-            if (PlayerDataManager.instance.playerData.isActiveGameElements[playerType])
+            foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
             {
-                switch (playerType)
+                if (PlayerDataManager.instance.playerData.isActiveGameElements[playerType])
                 {
-                    case FiveFactorQuestionManager.PlayerType.Aesthietic:
-                        questButton.SetActive(true);
-                        break;
-                    case FiveFactorQuestionManager.PlayerType.Narrative:
-                        achievementButton.SetActive(true);
-                        break;
-                    case FiveFactorQuestionManager.PlayerType.Goal:
-                        levelButton.SetActive(true);
-                        break;
-                    case FiveFactorQuestionManager.PlayerType.Challenge:
-                        bossButton.SetActive(true);
-                        break;
-                    case FiveFactorQuestionManager.PlayerType.Social:
-                        break;
+                    switch (playerType)
+                    {
+                        case FiveFactorQuestionManager.PlayerType.Aesthietic:
+                            questButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Narrative:
+                            achievementButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Goal:
+                            levelButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Challenge:
+                            bossButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Social:
+                            break;
+                    }
                 }
             }
         }
+
+        if(PlayerDataManager.instance.playerData.group == PlayerData.Group.B)
+        {
+            int maxPercentage = PlayerDataManager.instance.playerData.playerTypePercentages.Values.Max();
+
+            foreach (FiveFactorQuestionManager.PlayerType playerType in Enum.GetValues(typeof(FiveFactorQuestionManager.PlayerType)))
+            {
+                if (PlayerDataManager.instance.playerData.playerTypePercentages[playerType] == maxPercentage)
+                {
+                    switch (playerType)
+                    {
+                        case FiveFactorQuestionManager.PlayerType.Aesthietic:
+                            questButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Narrative:
+                            achievementButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Goal:
+                            levelButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Challenge:
+                            bossButton.SetActive(true);
+                            break;
+                        case FiveFactorQuestionManager.PlayerType.Social:
+                            break;
+                    }
+                }
+            }
+        }
+        
     }
 
     public void ShowDescription(int cursorTarget)

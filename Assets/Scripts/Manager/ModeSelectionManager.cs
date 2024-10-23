@@ -11,15 +11,22 @@ public class ModeSelectionManager : MonoBehaviour
         private set;
     }
 
-    [field: SerializeField, RenameField("YesButton")]
-    private GameObject yesButton
+    [field: SerializeField, RenameField("AButton")]
+    private GameObject aButton
     {
         get;
         set;
     }
 
-    [field: SerializeField, RenameField("NoButton")]
-    private GameObject noButton
+    [field: SerializeField, RenameField("BButton")]
+    private GameObject bButton
+    {
+        get;
+        set;
+    }
+
+    [field: SerializeField, RenameField("CButton")]
+    private GameObject cButton
     {
         get;
         set;
@@ -41,14 +48,35 @@ public class ModeSelectionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        yesButton.GetComponent<Button>().onClick.AddListener(() => SetGameMode(true));
-        noButton.GetComponent<Button>().onClick.AddListener(() => SetGameMode(false));
+        aButton.GetComponent<Button>().onClick.AddListener(() => SetGroupA());
+        bButton.GetComponent<Button>().onClick.AddListener(() => SetGroupB());
+        cButton.GetComponent<Button>().onClick.AddListener(() => SetGroupC());
     }
 
+    /*
     private void SetGameMode(bool isUsing)
     {
         PlayerDataManager.instance.playerData.isUsingGameElements = isUsing;
 
+        GameManager.instance.ShowMenuPage();
+    }
+    */
+
+    private void SetGroupA()
+    {
+        PlayerDataManager.instance.playerData.group = PlayerData.Group.A;
+        GameManager.instance.ShowMenuPage();
+    }
+
+    private void SetGroupB()
+    {
+        PlayerDataManager.instance.playerData.group = PlayerData.Group.B;
+        GameManager.instance.ShowMenuPage();
+    }
+
+    private void SetGroupC()
+    {
+        PlayerDataManager.instance.playerData.group = PlayerData.Group.C;
         GameManager.instance.ShowMenuPage();
     }
 }
