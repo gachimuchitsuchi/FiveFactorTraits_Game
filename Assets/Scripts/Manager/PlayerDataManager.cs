@@ -158,6 +158,9 @@ public class PlayerDataManager : MonoBehaviour
             writer.WriteLine("学習後テスト点数:" + playerData.scoreAfterLearning + "点");
             writer.WriteLine("");
             writer.WriteLine("最終レベル:" + playerData.level);
+            writer.WriteLine("タイピングプレイ回数:" + playerData.typPlayCnt + "回");
+            writer.WriteLine("Bossプレイ回数" + playerData.bossPlayCnt + "回");
+            writer.WriteLine("アチーブメント解放数" + playerData.unlockAchiveCnt + "個");
         }
     }
 }

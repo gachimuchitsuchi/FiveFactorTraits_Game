@@ -136,5 +136,7 @@ public class ExaminationResultManager : MonoBehaviour
                 }
             }
         }
+
+        AchievementManager.instance.CntUnlockAchivement();
     }
 }
