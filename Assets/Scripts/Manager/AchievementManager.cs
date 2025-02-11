@@ -116,6 +116,19 @@ public class AchievementManager : MonoBehaviour
         UnlockAchievement(12);
     }
 
+    public void CntUnlockAchivement()
+    {
+        int cnt = 0;
+        foreach(Achievement achievement in achievements)
+        {
+            if (achievement.unlocked)
+            {
+                cnt++;
+            }
+        }
+        PlayerDataManager.instance.playerData.unlockAchiveCnt = cnt;
+    }
+
     //save
     public static string StringizeCorrectlyAnsweredWords(Dictionary<Word, bool> dictionary)
     {

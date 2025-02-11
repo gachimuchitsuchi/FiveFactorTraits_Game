@@ -120,6 +120,8 @@ public class BossManager : MonoBehaviour
                                'm','n','o','p','q','r','s','t','u','v','w','x',
                                'y','z'};
 
+    private List<GameObject> wordElements = new List<GameObject>();
+
     private void Awake()
     {
         CreateInstance();
@@ -163,9 +165,17 @@ public class BossManager : MonoBehaviour
     private void Initialize()
     {
         GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+        GameObject gameClearText = gameOverPanel.transform.Find("GameClearText").gameObject;
         GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
         retryButton.SetActive(true);
+        gameClearText.SetActive(false);
         gameOverText.SetActive(false);
+
+        foreach (GameObject wordElement in wordElements)
+        {
+            Destroy(wordElement);
+        }
+        wordElements.Clear();
 
         currentQuestionNumber = 0;
         examinationWordsCount = 0;
@@ -241,8 +251,18 @@ public class BossManager : MonoBehaviour
 
         japaneseText.text = "";
 
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Button>().interactable = false;
+        }
+
         yield return StartCoroutine(AppearEnemy(enemyNumber));
         gameObject.GetComponent<ShakeByRandom>().StartShake(0.3f, 0.3f, 0.3f);
+
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Button>().interactable = true;
+        }
 
         lifeText.text = "×" + (life-1);
         countDown.StartCountDown();
@@ -463,8 +483,38 @@ public class BossManager : MonoBehaviour
         }
         else
         {
-            GameManager.instance.ShowMenuPage();
+            GameClear();
         }
+    }
+
+    private void GameClear()
+    {
+        PlayerDataManager.instance.playerData.bossPlayCnt += 1;
+
+        japaneseText.GetComponent<ChangeUISize>().StopEnlarge();
+        countDown.StopCountDown();
+
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Button>().interactable = false;
+        }
+
+        gameOverPanel.GetComponent<AnimatedDialog>().Open();
+
+        GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+        GameObject gameClearText = gameOverPanel.transform.Find("GameClearText").gameObject;
+        GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
+
+        retryButton.SetActive(false);
+        gameClearText.SetActive(true);
+        gameOverText.SetActive(false);
+
+        foreach (GameObject wordButton in wordButtons)
+        {
+            wordButton.GetComponent<Image>().color = Color.white;
+            wordButton.GetComponent<Button>().interactable = true;
+        }
+
     }
 
     private void Retry()
@@ -498,10 +548,10 @@ public class BossManager : MonoBehaviour
 
         //ワードボードをゲームオーバーパネルの子階層に作成
         GameObject wordElement = Instantiate(wordPrefab, gameOverPanel.transform);
-
+        wordElements.Add(wordElement);
 
         //Retry時、次の問題にいくため問題更新
-        for(int i=0; i<wordButtons.Count; i++)
+        for (int i=0; i<wordButtons.Count; i++)
         {
             if (wordButtons[i].GetComponent<WordButtonBehaviour>().isAnswer)
             {
@@ -512,10 +562,14 @@ public class BossManager : MonoBehaviour
 
         if (life == 0) 
         {
+            PlayerDataManager.instance.playerData.bossPlayCnt += 1;
+
             GameObject retryButton = gameOverPanel.transform.Find("RetryButton").gameObject;
+            GameObject gameClearText = gameOverPanel.transform.Find("GameClearText").gameObject;
             GameObject gameOverText = gameOverPanel.transform.Find("GameOverText").gameObject;
 
             retryButton.SetActive(false);
+            gameClearText.SetActive(false);
             gameOverText.SetActive(true);
         }
 

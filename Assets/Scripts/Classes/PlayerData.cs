@@ -77,6 +77,24 @@ public class PlayerData
         set;
     }
 
+    public int bossPlayCnt
+    {
+        get;
+        set;
+    }
+
+    public int typPlayCnt
+    {
+        get;
+        set;
+    }
+
+    public int unlockAchiveCnt
+    {
+        get;
+        set;
+    }
+
     public int level
     {
         get;
@@ -158,6 +176,9 @@ public class PlayerData
 
         playTime = PlayerPrefs.GetFloat("Play Time", 0.0f);
 
+        bossPlayCnt = PlayerPrefs.GetInt("BossPlayCnt", 0);
+        typPlayCnt = PlayerPrefs.GetInt("TypPlayCnt", 0);
+        unlockAchiveCnt = PlayerPrefs.GetInt("UnlockAchiveCnt", 0);
         level = PlayerPrefs.GetInt("Level", 1);
         exp = PlayerPrefs.GetInt("Exp", 0);
 
@@ -235,6 +256,9 @@ public class PlayerData
 
         PlayerPrefs.SetFloat("Play Time", playTime);
 
+        PlayerPrefs.SetInt("BossPlayCnt", bossPlayCnt);
+        PlayerPrefs.SetInt("TypPlayCnt",typPlayCnt);
+        PlayerPrefs.SetInt("UnlockAchiveCnt", unlockAchiveCnt);
         PlayerPrefs.SetInt("Level", level);
         PlayerPrefs.SetInt("Exp", exp);
 

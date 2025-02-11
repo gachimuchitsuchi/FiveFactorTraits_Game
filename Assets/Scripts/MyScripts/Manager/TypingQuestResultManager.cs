@@ -48,5 +48,6 @@ public class TypingQuestResultManager : MonoBehaviour
     {
         timeScoreText.text = timeScore.ToString("f1") + "秒";
         questTitle.text = examinationWordsCount + "問" + " " + "タイピング";
+        PlayerDataManager.instance.playerData.typPlayCnt += 1;
     }
 }
