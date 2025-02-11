@@ -17467,7 +17467,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BOSS MENU
+  m_text: COMBAT MENU
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d3a6a7c149a0b144e8434d15bdb7eed7, type: 2}
   m_sharedMaterial: {fileID: -9155033568722784141, guid: d3a6a7c149a0b144e8434d15bdb7eed7, type: 2}
@@ -19296,7 +19296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1374780246
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23757,7 +23757,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30B2\u30FC\u30E0\u8981\u7D20\u3092\u4F7F\u3044\u307E\u3059\u304B\uFF1F"
+  m_text: "\u30B0\u30EB\u30FC\u30D7\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d3a6a7c149a0b144e8434d15bdb7eed7, type: 2}
   m_sharedMaterial: {fileID: -9155033568722784141, guid: d3a6a7c149a0b144e8434d15bdb7eed7, type: 2}
